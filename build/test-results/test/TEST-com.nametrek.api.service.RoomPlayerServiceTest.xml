@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nametrek.api.service.RoomPlayerServiceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-12-19T20:52:45" hostname="akanBox" time="0.381">
+  <properties/>
+  <testcase name="testDeletePlayerThrowsException()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.188"/>
+  <testcase name="testGetPlayerOrderBy()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.013"/>
+  <testcase name="testDeletePlayer()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.024"/>
+  <testcase name="testUpdatePlayerUsernamAndScore()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.107"/>
+  <testcase name="testUpdatePlayerUsernam()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.018"/>
+  <testcase name="testCreate()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.011"/>
+  <testcase name="testAddPlayerToRoom()" classname="com.nametrek.api.service.RoomPlayerServiceTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
