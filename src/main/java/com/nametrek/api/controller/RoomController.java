@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nametrek.api.dto.RoomPlayerResponse;
-import com.nametrek.api.dto.RoomPlayerResponse;
 import com.nametrek.api.dto.PlayerDto;
 import com.nametrek.api.dto.RoomDto;
+import com.nametrek.api.dto.RoomEventResponse;
 import com.nametrek.api.dto.UsernameDto;
 import com.nametrek.api.exception.ObjectNotFoundException;
-import com.nametrek.api.service.RoomPlayerService;
+import com.nametrek.api.exception.RoomEmptyException;
 import com.nametrek.api.exception.RoomFullException;
 import com.nametrek.api.model.Player;
 import com.nametrek.api.model.Room;
+import com.nametrek.api.service.PlayerService;
 import com.nametrek.api.service.RoomService;
 
 import jakarta.validation.Valid;
@@ -46,12 +46,11 @@ public class RoomController {
 
 
     private RoomService roomService;
-    private RoomPlayerService roomPlayerService;
+    private PlayerService playerService;
 
     @Autowired
-    public RoomController(RoomService roomService, RoomPlayerService roomPlayerService) {
+    public RoomController(RoomService roomService, PlayerService playerService) {
         this.roomService = roomService;
-        this.roomPlayerService = roomPlayerService;
     }
 
     /**
@@ -78,9 +77,8 @@ public class RoomController {
      * @return the newly created room with a status code of 201 
      */
     @PostMapping("")
-    public ResponseEntity<RoomPlayerResponse> create(@Valid @RequestBody UsernameDto usernameDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                roomPlayerService.create(usernameDto.getUsername()));
+    public ResponseEntity<RoomEventResponse> create(@Valid @RequestBody UsernameDto usernameDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomService.create(usernameDto.getUsername()));
     }
 
     /**
@@ -92,7 +90,7 @@ public class RoomController {
      * @return A message on success otherwise a not found (404) status code
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateRoom(@PathVariable String id, @RequestBody RoomDto roomDto) {
+    public ResponseEntity<String> update(@PathVariable String id, @RequestBody RoomDto roomDto) {
         try {
             roomService.update(id, roomDto);
             return ResponseEntity.ok("Room with " + id + " updated");
@@ -111,16 +109,17 @@ public class RoomController {
      * @return A message on success otherwise a bad request (401) status code
      */
     @PutMapping("/{roomId}/players/{playerId}")
-    public ResponseEntity<RoomPlayerResponse> updatePlayer(
+    public ResponseEntity<Void> updatePlayer(
             @PathVariable String roomId, 
             @PathVariable String playerId,
             @Valid @RequestBody PlayerDto playerDto) {
         try {
-            return ResponseEntity.ok(roomPlayerService.updatePlayer(roomId, playerId, playerDto));
+            roomService.updatePlayer(roomId, playerId, playerDto);
+            return ResponseEntity.noContent().build();
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -133,15 +132,17 @@ public class RoomController {
      * @return A message on success otherwise not found (401) status code
      */
     @DeleteMapping("/{roomId}/players/{playerId}")
-    public ResponseEntity<String> removePlayerFromRoom(@PathVariable String roomId, @PathVariable String playerId) {
+    public ResponseEntity<String> leave(@PathVariable String roomId, @PathVariable String playerId) {
         try {
-            roomPlayerService.deletePlayer(roomId, playerId);
+            roomService.removePlayerFromRoom(roomId, playerId);
             return ResponseEntity.ok("Player with " + playerId + " deleted");
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Player or Room not found");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Player not in room " + roomId);
-        } 
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Player not in room"); // Player is not in room
+        } catch (RoomEmptyException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Room is empty"); // Player is not in room
+        }
     }
 
     /**
@@ -153,11 +154,12 @@ public class RoomController {
      * @return The RoomPlayerResponse otherwise forbidden (404) status code
      */
     @PutMapping("/{id}/join")
-    public ResponseEntity<RoomPlayerResponse> addPlayerToRoom(@PathVariable String id, @Valid @RequestBody UsernameDto usernameDto) {
+    public ResponseEntity<RoomEventResponse> join(@PathVariable String id, @Valid @RequestBody UsernameDto usernameDto) {
         try {
-            return ResponseEntity.ok(
-                    roomPlayerService.addPlayerToRoom(id, usernameDto.getUsername()));
+            return ResponseEntity.ok(roomService.addPlayerToRoom(id, usernameDto.getUsername()));
         } catch (RoomFullException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
@@ -170,11 +172,26 @@ public class RoomController {
      * @return a list of players
      */
     @GetMapping("/{roomId}/players")
-    public  ResponseEntity<List<Player>> getPlayers(@PathVariable String roomId, @RequestParam String sort) {
+    public ResponseEntity<List<Player>> getActivePlayers(@PathVariable String roomId, @RequestParam String sort) {
         sort = sort.toUpperCase().trim();
         if (!sort.equals("DESC")) {
             sort = "ASC";
         }
-        return ResponseEntity.ok(roomPlayerService.getPlayersOrderBy(sort, roomId));
+        return ResponseEntity.ok(playerService.getPlayersOrderBy(sort, roomId));
+    }
+
+    /**
+     * Delete a room
+     *
+     * @param id the room id
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable String id) {
+        try {
+            roomService.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

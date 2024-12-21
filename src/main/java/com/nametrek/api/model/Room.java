@@ -2,6 +2,8 @@ package com.nametrek.api.model;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.nametrek.api.exception.RoomEmptyException;
+import com.nametrek.api.exception.RoomFullException;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +26,19 @@ public class Room implements Identifiable {
     public Room(Integer activePlayerCount, String owner) {
         this.owner = owner;
         this.activePlayerCount = activePlayerCount;
+    }
+    
+    public void incrementPlayerCount() {
+        if (activePlayerCount >= maxRounds) {
+            throw new RoomFullException("The room is full. No more players can join");
+        }
+        activePlayerCount++;
+    }
+
+    public void decrementPlayerCount() {
+        if (activePlayerCount <= 0) {
+            throw new RoomEmptyException("The room is empty");
+        }
+        activePlayerCount--;
     }
 }

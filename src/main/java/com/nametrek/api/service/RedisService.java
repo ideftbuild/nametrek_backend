@@ -166,6 +166,28 @@ public class RedisService {
     public boolean hasKey(String hash, String key) {
         return template.opsForHash().hasKey(hash, key);
     }
+
+    /**
+     * Add a member to a set
+     *
+     * @param key the key to the set
+     * @param member  the new member to add to the set
+     */
+    public void addToSet(String key, String member) {
+        template.opsForSet().add(key, member);
+    }
+
+    /**
+     * Checks if member is present in a set
+     *
+     * @param key the key to the set
+     * @param member  the new member to add to the set
+     *
+     * @return true if member is in set otherwise false
+     */
+    public boolean isMemberOfSet(String key, String member) {
+        return template.opsForSet().isMember(key, member);
+    }
 }
 
 

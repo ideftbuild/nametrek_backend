@@ -48,4 +48,8 @@ public class Player implements Identifiable, Scorable {
             throw new RuntimeException("Error create deep copy of player", e);
         }
     }
+
+    public void incrementScore(Integer step) {
+        score += step;
+    }
 }
