@@ -24,6 +24,6 @@ public class NotificationService {
      * @param message the message
      */
     public <T> void sendMessageToTopic(String topic, T message) {
-        messagingTemplate.convertAndSend("/game" + topic, message);
+        messagingTemplate.convertAndSend(topic, message);
     }
 }

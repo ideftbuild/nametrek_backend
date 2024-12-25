@@ -29,11 +29,19 @@ public class Room implements Identifiable {
     }
     
     public void incrementPlayerCount() {
-        if (activePlayerCount >= maxRounds) {
+        if (activePlayerCount >= maxPlayers) {
             throw new RoomFullException("The room is full. No more players can join");
         }
         activePlayerCount++;
     }
+
+    public void incrementRound() {
+        if (currentRound >= maxRounds) {
+            throw new RoomFullException("Round complete");
+        }
+        currentRound++;
+    }
+
 
     public void decrementPlayerCount() {
         if (activePlayerCount <= 0) {
@@ -41,4 +49,5 @@ public class Room implements Identifiable {
         }
         activePlayerCount--;
     }
+
 }

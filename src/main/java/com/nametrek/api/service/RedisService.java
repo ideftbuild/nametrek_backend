@@ -1,16 +1,11 @@
 package com.nametrek.api.service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import com.nametrek.api.model.Identifiable;
@@ -30,6 +25,26 @@ public class RedisService {
         this.template = template;
     }
 
+    /**
+     * Set a value
+     *
+     * @param key the key
+     * @param value the value
+     */
+    public <T> void setValue(String key, T value) {
+        template.opsForValue().set(key, value);
+    }
+
+    /**
+     * Get a value
+     *
+     * @param key the key
+     *
+     * @return the object that is mapped to key
+     */
+    public Object getValue(String key) {
+        return template.opsForValue().getAndDelete(key);
+    }
 
     /**
      * Set a field in a hash
