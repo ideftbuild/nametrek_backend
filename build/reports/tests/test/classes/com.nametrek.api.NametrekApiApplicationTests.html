@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.875s</div>
+<div class="counter">0.022s</div>
 <p>duration</p>
 </div>
 </td>
@@ -66,9 +66,6 @@
 <li>
 <a href="#tab1">Standard output</a>
 </li>
-<li>
-<a href="#tab2">Standard error</a>
-</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -82,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.875s</td>
+<td class="success">0.022s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>21:52:41.112 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:52:41.238 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
+<pre>18:27:49.189 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:27:49.371 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,26 +99,15 @@
 
  :: Spring Boot ::                (v3.4.0)
 
-2024-12-19T21:52:41.748+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.5 with PID 58331 (started by akan in /home/akan/projects/nametrek_backend)
-2024-12-19T21:52:41.751+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-12-19T21:52:42.899+01:00  INFO 58331 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2024-12-19T21:52:42.901+01:00  INFO 58331 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2024-12-19T21:52:42.940+01:00  INFO 58331 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
-2024-12-19T21:52:44.574+01:00  INFO 58331 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2024-12-19T21:52:44.579+01:00  INFO 58331 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@389a1e34]]
-2024-12-19T21:52:44.580+01:00  INFO 58331 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2024-12-19T21:52:44.597+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 3.204 seconds (process running for 4.668)
-</pre>
-</span>
-</div>
-<div id="tab2" class="tab">
-<h2>Standard error</h2>
-<span class="code">
-<pre>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
-WARNING: A Java agent has been loaded dynamically (/home/akan/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.10/e8eb255b2c378b9a6c7341e7b0e12f0a5636377/byte-buddy-agent-1.15.10.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2024-12-25T18:27:50.031+01:00  INFO 41637 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.5 with PID 41637 (started by akan in /home/akan/projects/nametrek_backend)
+2024-12-25T18:27:50.041+01:00  INFO 41637 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-12-25T18:27:51.247+01:00  INFO 41637 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-25T18:27:51.251+01:00  INFO 41637 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-12-25T18:27:51.316+01:00  INFO 41637 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2024-12-25T18:27:53.386+01:00  INFO 41637 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2024-12-25T18:27:53.392+01:00  INFO 41637 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@3c74d846]]
+2024-12-25T18:27:53.393+01:00  INFO 41637 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2024-12-25T18:27:53.418+01:00  INFO 41637 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 3.812 seconds (process running for 6.893)
 </pre>
 </span>
 </div>
@@ -133,7 +119,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at Dec 19, 2024, 9:52:46 PM</p>
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at Dec 25, 2024, 6:27:54 PM</p>
 </div>
 </div>
 </body>

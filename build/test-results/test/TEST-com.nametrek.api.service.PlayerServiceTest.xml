@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-12-19T20:52:45" hostname="akanBox" time="0.323">
+<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2024-12-25T17:27:53" hostname="akanBox" time="0.144">
   <properties/>
-  <testcase name="testGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.276"/>
-  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.01"/>
-  <testcase name="testDeleteThrowsException()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.011"/>
-  <testcase name="testCreate()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.01"/>
-  <testcase name="testDelete()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.008"/>
-  <system-out><![CDATA[2024-12-19T21:52:45.709+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.service.PlayerServiceTest        : id for the player: b408b93b-b1b9-46ef-a02b-624a1b45d4d1
-2024-12-19T21:52:45.788+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.service.PlayerServiceTest        : id for the player: 17f4c785-207c-49bd-9738-96ad79ccac14
-2024-12-19T21:52:45.797+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.service.PlayerServiceTest        : id for the player: de462b0c-f3a6-4bc7-b779-7a0b5f735561
-2024-12-19T21:52:45.809+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.service.PlayerServiceTest        : id for the player: 07037967-d205-40ef-bed4-43e521ed46ae
-2024-12-19T21:52:45.820+01:00  INFO 58331 --- [Nametrek API] [    Test worker] c.n.api.service.PlayerServiceTest        : id for the player: 0acd127f-f8b9-40dc-9fbf-d74a3940ff1e
-]]></system-out>
+  <testcase name="testCreateWithUsername()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.016"/>
+  <testcase name="testGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.01"/>
+  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.005"/>
+  <testcase name="testCreateWithUsernameAndRoomId()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.005"/>
+  <testcase name="testDeleteThrowsException()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.006"/>
+  <testcase name="testPersistDelete()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.004"/>
+  <testcase name="testPersistUpdate()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.077"/>
+  <testcase name="testDelete()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.004"/>
+  <testcase name="testGetPlayersOrderBy()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
