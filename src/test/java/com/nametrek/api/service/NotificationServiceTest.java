@@ -24,10 +24,10 @@ public class NotificationServiceTest {
      */
     @Test
     public void testSendMessageToTopic() {
-        doNothing().when(messagingTemplate).convertAndSend("/game/room/1", "Hello");
+        doNothing().when(messagingTemplate).convertAndSend("/room/1", "Hello");
 
         notificationService.sendMessageToTopic("/room/1", "Hello");
 
-        verify(messagingTemplate).convertAndSend("/game/room/1", "Hello");
+        verify(messagingTemplate).convertAndSend("/room/1", "Hello");
     }
 }

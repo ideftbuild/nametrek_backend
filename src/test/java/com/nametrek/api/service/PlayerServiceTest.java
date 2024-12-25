@@ -1,5 +1,7 @@
 package com.nametrek.api.service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nametrek.api.dto.PlayerDto;
 import com.nametrek.api.exception.ObjectNotFoundException;
 import com.nametrek.api.model.Player;
@@ -47,25 +50,43 @@ public class PlayerServiceTest {
 
     private Player player;
 
+    private Room room;
+
     @InjectMocks
     private PlayerService playerService;
 
     @BeforeEach
     public void setUp() {
-        this.player = new Player("username");
-        log.info("id for the player: " + player.getId());
+        player = new Player("Akan");
+        room = new Room(1, player.getId());
+        player.setRoomId(room.getId());
     }
 
     /**
      * Verify that the create method adds a new field to set hash
      */
     @Test
-    public void testCreate() {
+    public void testCreateWithUsername() {
         doNothing().when(redisService).setField(any(), any());
         Player player = playerService.create("Akan");
 
         verify(redisService).setField(any(), any());
         assertEquals(player.getUsername(), "Akan");
+    }
+
+    /**
+     * Verify that the create method adds a new field to set hash
+     */
+    @Test
+    public void testCreateWithUsernameAndRoomId() {
+        doNothing().when(redisService).setField(any(), any());
+
+        Player player = playerService.create("Akan", room.getId());
+
+        verify(redisService).setField(any(), any());
+
+        assertEquals(player.getUsername(), "Akan");
+        assertEquals(player.getRoomId(), room.getId());
     }
 
     /**
@@ -84,11 +105,12 @@ public class PlayerServiceTest {
      */
     @Test
     public void testGet() {
-        when(redisService.getField("players", "key")).thenReturn(this.player);
+        when(redisService.getField("players", "1234")).thenReturn(this.player);
 
-        playerService.get("key");
+        Player player = playerService.get("1234");
 
-        verify(redisService).getField("players", "key");
+        verify(redisService).getField("players", "1234");
+        assertEquals(player, this.player);
     }
 
     /**
@@ -103,6 +125,9 @@ public class PlayerServiceTest {
         verify(redisService).deleteField("players", player.getId());
     }
 
+    /**
+     * Test that the delete method throws an exception when the deleteField method fails
+     */
     @Test
     public void testDeleteThrowsException(){
         when(redisService.deleteField("players", player.getId())).thenReturn(0L);
@@ -114,34 +139,72 @@ public class PlayerServiceTest {
 
         verify(redisService).deleteField("players", player.getId());
     }
-    // @Test
-    // public void testDelete() {
-    //     Player player = new Player("username");
-    //     Room room = new Room();
-    //     String key = String.format("rooms:%s:players", room.getId());
-    //
-    //     when(redisService.deleteMemberFromSortedSet(key, player)).thenReturn(1L);
-    //
-    //     playerService.delete(room.getId(), player);
-    //
-    //     verify(redisService).deleteMemberFromSortedSet(key, player);
-    // }
-    //
-    // @Test
-    // public void tetDeleteThrowsAnException() {
-    //     Player player = new Player("username");
-    //     Room room = new Room();
-    //     String key = String.format("rooms:%s:players", room.getId());
-    //
-    //     when(redisService.deleteMemberFromSortedSet(key, player)).thenReturn(0L);
-    //
-    //     assertThrows(ObjectNotFoundException.class, () -> {
-    //        playerService.delete(room.getId(), player); 
-    //     });
-    //
-    //     verify(redisService).deleteMemberFromSortedSet(key, player);
-    // }
 
+    /**
+     * Test that the update persist accross the collection
+     */
+    @Test
+    public void testPersistUpdate() {
+        ObjectMapper objMapper = new ObjectMapper();
+        String key = String.format("rooms:%s:players", player.getRoomId());
+
+        Player originalPlayer = player.deepCopy(objMapper);
+        player.setUsername("Doe");
+        when(redisService.getField("players", player.getId())).thenReturn(originalPlayer);
+        doNothing().when(redisService).updateSortedSetMemberAndHash(
+                key, "players", originalPlayer, player);
+
+        playerService.persistUpdate(player);
+
+        verify(redisService).getField("players", player.getId());
+        verify(redisService).updateSortedSetMemberAndHash(key, "players", originalPlayer, player);
+    }
+
+    /**
+     * Test that the deletion persist accross the collections
+     */
+    @Test
+    public void testPersistDelete() {
+        String key = String.format("rooms:%s:players", player.getRoomId());
+        doNothing().when(redisService).deleteMemberFromSortedSetAndHash(key, "players", player);
+
+        playerService.persistDelete(room.getId(), player);
+
+        verify(redisService).deleteMemberFromSortedSetAndHash(key, "players", player);
+    }
+
+    /**
+     * Verify that the method retrieves a player in ascending or descending order
+     * by converting the result returned to a list to maintain the order
+     */
+    @Test
+    public void testGetPlayersOrderBy() {
+        String key = String.format("rooms:%s:players", player.getRoomId());
+
+        Set<Object> set = new HashSet<>();
+        set.add((Object) player);
+        
+        when(redisService.getSortedSet("DESC", key)).thenReturn(set);
+        playerService.getPlayersOrderBy("DESC", room.getId());
+
+        verify(redisService).getSortedSet("DESC", key);
+    }
+
+    // @Test
+    // public void testIncrementScore() {
+    //     PlayerService mockPlayerService = mock(PlayerService.class);
+    //     when(mockPlayerService.get(player.getId())).thenReturn(player);
+    //     doNothing().when(mockPlayerService).persistUpdate(player);
+    //     
+    //     mockPlayerService.incrementScore(player.getId(), 10);
+    //
+    //
+    //     verify(mockPlayerService).get(player.getId());
+    //     verify(mockPlayerService).persistUpdate(player);
+    //
+    //     assertEquals(player.getScore(), 10);
+    // }
+    
     // @Test
     // public void integration() {
     //     Room room = Room.builder().build();
