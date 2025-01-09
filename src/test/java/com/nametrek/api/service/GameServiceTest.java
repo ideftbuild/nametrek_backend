@@ -9,11 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class GameServiceTest {
 
-    @Mock
-    private NotificationService notificationService;
-
-    @InjectMocks
-    private GameService gameService;
+    // @Mock
+    // private NotificationService notificationService;
+    //
+    // @InjectMocks
+    // private GameService gameService;
 
     // @Test
     // public void testStartGame() {
