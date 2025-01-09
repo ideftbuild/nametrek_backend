@@ -3,6 +3,7 @@ package com.nametrek.api.controller;
 import java.security.InvalidKeyException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nametrek.api.dto.CreateRoomDto;
+import com.nametrek.api.dto.JoinRoomDto;
 import com.nametrek.api.dto.PlayerDto;
 import com.nametrek.api.dto.RoomDto;
 import com.nametrek.api.dto.RoomEventResponse;
-import com.nametrek.api.dto.UsernameDto;
+import com.nametrek.api.dto.RoomPlayerInfo;
+import com.nametrek.api.dto.PlayerNameDto;
 import com.nametrek.api.exception.ObjectNotFoundException;
 import com.nametrek.api.exception.RoomEmptyException;
 import com.nametrek.api.exception.RoomFullException;
@@ -31,7 +35,11 @@ import com.nametrek.api.model.Player;
 import com.nametrek.api.model.Room;
 import com.nametrek.api.service.PlayerService;
 import com.nametrek.api.service.RoomService;
+import com.nametrek.api.utils.CookieUtil;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,153 +53,133 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomController {
 
 
-    private RoomService roomService;
-    private PlayerService playerService;
+    private final RoomService roomService;
 
     @Autowired
-    public RoomController(RoomService roomService, PlayerService playerService) {
+    public RoomController(RoomService roomService) {
         this.roomService = roomService;
     }
-
-    /**
-     * Retrieve a room
-     *
-     * @param id the id of the room
-     *
-     * @return the room object otherwise not found (404) status code
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Room> get(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(roomService.get(id));
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
+    //
+    // /**
+    //  * Retrieve a room
+    //  *
+    //  * @param id the id of the room
+    //  *
+    //  * @return the room object otherwise not found (404) status code
+    //  */
+    // @GetMapping("/{id}")
+    // public ResponseEntity<Room> get(@PathVariable String id) {
+    //     try {
+    //         return ResponseEntity.ok(roomService.get(id));
+    //     } catch (ObjectNotFoundException e) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
+    //
     /**
      * Create a room
      *
-     * @param usernameDto the username of the player
+     * @param createRoomDto dto containing the username of the player creating the room 
+     * and number of rounds to play
      * 
      * @return the newly created room with a status code of 201 
      */
     @PostMapping("")
-    public ResponseEntity<RoomEventResponse> create(@Valid @RequestBody UsernameDto usernameDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomService.create(usernameDto.getUsername()));
-    }
+    public ResponseEntity<RoomPlayerInfo> create(
+            @Valid @RequestBody CreateRoomDto createRoomDto,
+            HttpServletResponse response) {
 
-    /**
-     * Update a room
-     *
-     * @param id the id of ther oom
-     * @param roomDto fields to object the roomDto with
-     *
-     * @return A message on success otherwise a not found (404) status code
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable String id, @RequestBody RoomDto roomDto) {
-        try {
-            roomService.update(id, roomDto);
-            return ResponseEntity.ok("Room with " + id + " updated");
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
-        }
-    }
-
-    /**
-     * Update player fields 
-     *
-     * @param roomId the id of the room
-     * @param playerId the id of the player 
-     * @param playerDto contains the updated fields
-     * 
-     * @return A message on success otherwise a bad request (401) status code
-     */
-    @PutMapping("/{roomId}/players/{playerId}")
-    public ResponseEntity<Void> updatePlayer(
-            @PathVariable String roomId, 
-            @PathVariable String playerId,
-            @Valid @RequestBody PlayerDto playerDto) {
-        try {
-            roomService.updatePlayer(roomId, playerId, playerDto);
-            return ResponseEntity.noContent().build();
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-
-    /**
-     * Remove player from a room
-     *
-     * @param roomId the room id
-     * @param playerId the player id
-     *
-     * @return A message on success otherwise not found (401) status code
-     */
-    @DeleteMapping("/{roomId}/players/{playerId}")
-    public ResponseEntity<String> leave(@PathVariable String roomId, @PathVariable String playerId) {
-        try {
-            roomService.removePlayerFromRoom(roomId, playerId);
-            return ResponseEntity.ok("Player with " + playerId + " deleted");
-        } catch (ObjectNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Player or Room not found");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Player not in room"); // Player is not in room
-        } catch (RoomEmptyException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Room is empty"); // Player is not in room
-        }
+        RoomPlayerInfo roomPlayerInfo = roomService.create(createRoomDto.getPlayerName(), createRoomDto.getRounds());
+        CookieUtil.addCookie(response, "player_id", roomPlayerInfo.getPlayer().getId().toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomPlayerInfo);
     }
 
     /**
      * Add player to a room
      *
      * @param roomId the room id
-     * @param usernameDto dto containing the username
+     * @param playerNameDto dto containing the username
      *
      * @return The RoomPlayerResponse otherwise forbidden (404) status code
      */
-    @PutMapping("/{id}/join")
-    public ResponseEntity<RoomEventResponse> join(@PathVariable String id, @Valid @RequestBody UsernameDto usernameDto) {
+    @PutMapping("/{roomId}/join")
+    public ResponseEntity<RoomPlayerInfo> joinById(
+            @PathVariable String roomId,
+            @Valid @RequestBody PlayerNameDto playerNameDto,
+            HttpServletResponse response
+     ) {
         try {
-            return ResponseEntity.ok(roomService.addPlayerToRoom(id, usernameDto.getUsername()));
+            RoomPlayerInfo roomPlayerInfo = roomService.joinRoomById(UUID.fromString(roomId), playerNameDto.getPlayerName());
+            CookieUtil.addCookie(response, "player_id", roomPlayerInfo.getPlayer().getId().toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(roomPlayerInfo);
         } catch (RoomFullException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * Add player to a room
+     *
+     * @param joinRoomDto containing the username
+     *
+     * @return The RoomPlayerResponse otherwise forbidden (404) status code
+     */
+    @PutMapping("/join")
+    public ResponseEntity<RoomPlayerInfo> joinByCode(@Valid @RequestBody JoinRoomDto joinRoomDto, HttpServletResponse response) {
+        try {
+            RoomPlayerInfo roomPlayerInfo = roomService.joinRoomByCode(joinRoomDto.getRoomCode(), joinRoomDto.getPlayerName());
+            CookieUtil.addCookie(response, "player_id", roomPlayerInfo.getPlayer().getId().toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(roomPlayerInfo);
+        } catch (RoomFullException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{roomId}/players/me")
+    public ResponseEntity<PlayerDto> getPlayer(@PathVariable String roomId, HttpServletRequest request) {
+        String playerId = CookieUtil.getCookieValue(request, "player_id");
+        try {
+            if (playerId == null) {
+                throw new ObjectNotFoundException("Player session is empty");
+            }
+            Player player = roomService.getPlayer(UUID.fromString(roomId), Long.valueOf(playerId));
+            return ResponseEntity.ok(new PlayerDto(player.getId(), player.getName(), player.getScore(), false));
+        } catch (ObjectNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    /**
-     * Retrieves players in ascending or descending order.
-     *
-     * @param sort the sort order (ascending or descending)
-     * @param id the ID of the room
-     * @return a list of players
-     */
-    @GetMapping("/{roomId}/players")
-    public ResponseEntity<List<Player>> getActivePlayers(@PathVariable String roomId, @RequestParam String sort) {
-        sort = sort.toUpperCase().trim();
-        if (!sort.equals("DESC")) {
-            sort = "ASC";
-        }
-        return ResponseEntity.ok(playerService.getPlayersOrderBy(sort, roomId));
-    }
-
-    /**
-     * Delete a room
-     *
-     * @param id the room id
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable String id) {
+    @GetMapping("/{roomId}/missed-update")
+    public ResponseEntity<RoomEventResponse> getRoomUpdate(@PathVariable String roomId, HttpServletRequest request) {
+        String playerId = CookieUtil.getCookieValue(request, "player_id");
         try {
-            roomService.delete(id);
-            return ResponseEntity.noContent().build();
+            if (playerId == null) {
+                throw new ObjectNotFoundException("Player session is empty");
+            }
+            return ResponseEntity.ok(roomService.getRoomUpdate(UUID.fromString(roomId), Long.valueOf(playerId)));
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // /**
+    //  * Delete a room
+    //  *
+    //  * @param id the room id
+    //  */
+    // @DeleteMapping("/{id}")
+    // public ResponseEntity<Void> deleteRoom(@PathVariable String id) {
+    //     try {
+    //         roomService.delete(id);
+    //         return ResponseEntity.noContent().build();
+    //     } catch (ObjectNotFoundException e) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 }
