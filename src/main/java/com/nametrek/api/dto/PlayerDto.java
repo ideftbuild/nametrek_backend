@@ -1,16 +1,23 @@
 package com.nametrek.api.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class PlayerDto {
-    // private String id;
-    private String username;
-    private Integer score;
-    // private String roomId/* ; */
+    private Long id;
+    private String name;
+    private Double score;
+    private Boolean lost;
+
+    public PlayerDto(Long id, String name, Double score, Boolean lost) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+        this.lost = lost;
+    }
 }
 

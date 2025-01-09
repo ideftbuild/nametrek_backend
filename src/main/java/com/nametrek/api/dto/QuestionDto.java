@@ -9,22 +9,14 @@ import lombok.Getter;
 @Getter
 @Setter
 public class QuestionDto {
-    private final String id = UUID.randomUUID().toString();
-    private String question;
     private String category;
-    private String playerId;
+    private Long playerId;
 
-    public String getId() { return id; };
 
-    public String getPlayerId() { return playerId; };
-    // public QuestionDto(String category, String question, String playerId) {
-    //     this.question = question;
-    //     this.playerId = playerId;
-    // }
+    public Long getPlayerId() { return playerId; };
 
-    public QuestionDto(String category, String question) {
+    public QuestionDto(String category) {
         this.category = category;
-        this.question = question;
     }
 
 }

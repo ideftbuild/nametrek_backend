@@ -1,24 +1,30 @@
 package com.nametrek.api.dto;
 
-import com.nametrek.api.model.Player;
-import com.nametrek.api.model.Room;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
 
-@Getter
-@Setter
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Data;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoomEventResponse {
-    private Room room;
-    private Player player;
-    private String eventType; // e.g., "join" or "leave" 
-    private String timestamp; 
+    private Long playerId;
+    private RoomDto room;
+    private List<PlayerDto> players;
+    private EventType eventType; // e.g., "join" or "leave" 
                            
-    public RoomEventResponse(Room room, Player player, String eventType, String timestamp) {
+    public RoomEventResponse(RoomDto room, List<PlayerDto> players, EventType eventType) {
         this.room = room;
-        this.player = player;
+        this.players = players;
         this.eventType = eventType;
-        this.timestamp = timestamp;
+    }
+
+    public RoomEventResponse(Long playerId, List<PlayerDto> players, EventType eventType) { 
+        this.playerId = playerId;
+        this.players = players;
+        this.eventType = eventType;
     }
 }
+

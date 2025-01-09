@@ -1,10 +1,12 @@
 package com.nametrek.api.dto;
 
 import io.micrometer.common.lang.NonNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class UsernameDto {
+@AllArgsConstructor
+public class PlayerNameDto {
     @NonNull
-    private String username;
+    private String playerName;
 }
