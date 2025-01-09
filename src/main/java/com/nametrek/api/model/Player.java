@@ -6,37 +6,59 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class Player implements Identifiable, Scorable {
-	private String id = UUID.randomUUID().toString();
-	private String username;
-    private Integer score = 0;
-    private String roomId;
+@Entity
+@Table(name="players")
+public class Player {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Player (String username) {
-        this.username = username;
+    public enum EventType {
+        INACTIVE, ACTIVE
+    }
+	private String name;
+    private Double score = 0d;
+    private EventType status;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "FK_ROOM_PLAYER"))
+    private Room room;
+
+    public Player (String name) {
+        this.name = name;
     }
 
-    public Player (String username, String roomId) {
-        this.username = username;
-        this.roomId = roomId;
+    public Player (String name, Room room) {
+        this.name = name;
+        this.room = room;
     }
 
-    public Player (String username, String roomId, Integer score) {
-        this.username = username;
-        this.roomId = roomId;
+    public Player (String name, Room room, Double score) {
+        this.name = name;
+        this.room = room;
         this.score = score;
     }
 
-    @Override
-    public String getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public void activate() {
+        this.status = EventType.ACTIVE;
+    }
+
+    public void deactivate() {
+        this.status = EventType.INACTIVE;
     }
 
     public Player deepCopy(ObjectMapper ObjectMapper) {
@@ -51,5 +73,9 @@ public class Player implements Identifiable, Scorable {
 
     public void incrementScore(Integer step) {
         score += step;
+    }
+
+    public boolean isSameRoom(Room room) {
+        return this.room.equals(room);
     }
 }

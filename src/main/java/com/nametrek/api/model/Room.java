@@ -1,53 +1,32 @@
 package com.nametrek.api.model;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.nametrek.api.exception.RoomEmptyException;
-import com.nametrek.api.exception.RoomFullException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
+import com.nametrek.api.utils.CodeGenerator;
+
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @NoArgsConstructor
-public class Room implements Identifiable {
-    private final String id = UUID.randomUUID().toString();
-	private String status = "active";
-    private Integer activePlayerCount = 0;
-	private Integer maxPlayers = 4;
-	private Integer currentRound = 0;
-	private Integer maxRounds = 4;
-    private String owner;
+@Entity
+@Table(name="rooms")
+public class Room {
 
-    public Room(Integer activePlayerCount, String owner) {
-        this.owner = owner;
-        this.activePlayerCount = activePlayerCount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+	private Integer capacity = 4;
+	private Integer rounds = 4;
+
+    @Column(length = 10)
+    private String code = CodeGenerator.generateCode();
+
+    public Room(Integer rounds) {
+        this.rounds = rounds;
     }
-    
-    public void incrementPlayerCount() {
-        if (activePlayerCount >= maxPlayers) {
-            throw new RoomFullException("The room is full. No more players can join");
-        }
-        activePlayerCount++;
-    }
-
-    public void incrementRound() {
-        if (currentRound >= maxRounds) {
-            throw new RoomFullException("Round complete");
-        }
-        currentRound++;
-    }
-
-
-    public void decrementPlayerCount() {
-        if (activePlayerCount <= 0) {
-            throw new RoomEmptyException("The room is empty");
-        }
-        activePlayerCount--;
-    }
-
 }
