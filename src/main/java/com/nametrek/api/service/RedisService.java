@@ -1,10 +1,13 @@
 package com.nametrek.api.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
@@ -36,27 +39,72 @@ public class RedisService {
     }
 
     /**
-     * Get a value
+     * Set a value with an expiration time
+     *
+     * @param key the key
+     * @param value the value
+     * @param timeout expiration time
+     * @param timeUnit the unit
+     */
+    public <T> void setValueExp(String key, T value, long timeout, TimeUnit timeUnit) {
+        try {
+            template.opsForValue().set(key, value, timeout, timeUnit);
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage());
+        }
+    }
+
+    public <T> Double incrementValue(String key, T member, Double delta) {
+        return template.opsForZSet().incrementScore(key, member, delta);
+    }
+
+    // public Long decrementValue(String hash, String key) {
+    //     return template.opsForHash().increment(key, key, -1);
+    // }
+
+    /**
+     * Get a value and delete from database
+     *
+     * @param key the key
+     *
+     * @return the object that is mapped to key
+     */
+    public Object getAndDelete(String key) {
+        return template.opsForValue().getAndDelete(key);
+    }
+
+    /**
+     * Get a value 
      *
      * @param key the key
      *
      * @return the object that is mapped to key
      */
     public Object getValue(String key) {
-        return template.opsForValue().getAndDelete(key);
+        return template.opsForValue().get(key);
     }
 
     /**
-     * Set a field in a hash
+     * Delete a value
      *
-     * @param hash The hash
-     * @param object The object to set
+     * @param key the key
      */
-    public <T extends Identifiable> void setField(String hash, T object) {
-        String key = object.getId();
+    public boolean delete(String key) {
+        return template.delete(key);
+    }
+
+     
+    // /**
+    //  * Set a field in a hash
+    //  *
+    //  * @param hash The hash
+    //  * @param object The object to set
+    //  */
+    public <T> void setField(String hash, String key, T object) {
         template.opsForHash().put(hash, key, object);
     }
 
+    //
     /**
      * Get a field from a hash
      *
@@ -65,6 +113,10 @@ public class RedisService {
      */
     public Object getField(String hash, String key) {
         return template.opsForHash().get(hash, key);
+    }
+
+    public List<Object> getFields(String hash, Collection<Object> fields) {
+        return template.opsForHash().multiGet(hash, fields);
     }
 
     /**
@@ -85,8 +137,12 @@ public class RedisService {
      * @param member The member to add
      * @param score The score used for sorting
      */
-    public <T extends Scorable> void addToSortedSet(String key, T member, Integer score) {
+    public <T> void addToSortedSet(String key, T member, Double score) {
         template.opsForZSet().add(key, member, score);
+    }
+
+    public <T> Double getMemberScore(String key, T member) {
+        return template.opsForZSet().score(key, member);
     }
 
     /**
@@ -106,6 +162,21 @@ public class RedisService {
     } 
 
     /**
+     * Get member from a sorted set
+     *
+     * @param order the order to get the members from the sorted set
+     * @param key   the sorted set key
+     * @return      the a set of the members in order
+     */
+    public Set<TypedTuple<Object>> getSortedSetWithScores(String order, String key)
+    {
+        if (order.equals("DESC")) {
+            return template.opsForZSet().reverseRangeWithScores(key, 0, -1);
+        } else {
+            return template.opsForZSet().rangeWithScores(key, 0, -1);
+        }
+    } 
+    /**
      * Deletes a member from a sorted set.
      *
      * @param key the key of the sorted set
@@ -113,8 +184,8 @@ public class RedisService {
      *
      * @return a number greater than 0 on success
      */
-    public <T extends Scorable> Long deleteMemberFromSortedSet(String key, T member) {
-        return template.opsForZSet().remove(key, member, member.getScore());
+    public <T> Long deleteMemberFromSortedSet(String key, T member) {
+        return template.opsForZSet().remove(key, member);
     }
 
     /**
@@ -171,15 +242,26 @@ public class RedisService {
     }
 
     /**
-     * Checks if a key is present in a hash.
+     * Checks if a field is present in a hash using a key
      *
      * @param hash the hash to search
      * @param key  the key to check for
      *
+     * @return true if field is present otherwise false
+     */
+    public boolean fieldExists(String hash, String key) {
+        return template.opsForHash().hasKey(hash, key);
+    }
+
+
+    /**
+     * Checks if a key exists
+     *
+     * @param key th key to check for
      * @return true if key is present otherwise false
      */
-    public boolean hasKey(String hash, String key) {
-        return template.opsForHash().hasKey(hash, key);
+    public boolean keyExists(String key) {
+        return template.hasKey(key);
     }
 
     /**

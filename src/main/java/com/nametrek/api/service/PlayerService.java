@@ -1,10 +1,17 @@
 package com.nametrek.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
+import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 import com.nametrek.api.dto.PlayerDto;
 import com.nametrek.api.exception.ObjectNotFoundException;
 import com.nametrek.api.model.Player;
+import com.nametrek.api.model.PlayerSession;
+import com.nametrek.api.model.Room;
+import com.nametrek.api.model.Player.EventType;
+import com.nametrek.api.repository.PlayerRepository;
+import com.nametrek.api.utils.RedisKeys;
+
+import jakarta.transaction.Transactional;
 
 /**
  * Service for performing CRUD operations on player entities.
@@ -20,153 +34,123 @@ import com.nametrek.api.model.Player;
 @Slf4j
 public class PlayerService {
 
-    private RedisService redisService;
-    private String keyFormat = "rooms:%s:players";
+    private PlayerRepository playerRepository;
+    public final long WAIT_TIME_MINUTES = 5;
+    private final RedisService redisService;
+    private final Integer scoreUnit = 10;
 
     @Autowired
-    public PlayerService(RedisService redisService) {
+    public PlayerService(PlayerRepository playerRepository, RedisService redisService) {
+        this.playerRepository = playerRepository;
         this.redisService = redisService;
     }
 
-    /**
-     * Create a new player
-     *
-     * @param username player's username
-     *
-     * @return The newly created player
-     */
-    public Player create(String username) {
-        Player player = new Player(username);
-        save(player);
-        return player;
+    public Player getPlayerByRoom(Room room) {
+        return playerRepository.findByRoom(room).orElse(null);
     }
 
-    /**
-     * Create a new player
-     *
-     * @param username player's username
-     * @param roomId the room id
-     *
-     * @return The newly created player
-     */
-    public Player create(String username, String roomId) {
-        Player player = new Player(username, roomId);
-        save(player);
-        return player;
+    public List<Player> getPlayerByStatus(Room room, EventType status) {
+        return playerRepository.findByRoomAndStatus(room, status);
     }
 
-    /**
-     * Save a player 
-     *
-     * @param player The player
-     */
-	public void save(Player player) {
-		this.redisService.setField("players", player);
-	}
+    public Player save(Player player) {
+        return playerRepository.save(player);
+    }
 
-    /**
-     * Retrieve a player from the hash that maps to the key
-     *
-     * @param id The key that mapped to the player
-     */
-    public Player get(String id) {
-        Player player = (Player) this.redisService.getField("players", id);
+    public Player getPlayerById(Long id) {
+        Player player = playerRepository.findById(id).orElse(null);
         if (player == null) {
-            throw new ObjectNotFoundException("Player with id: " + id + " not found");
+            throw new ObjectNotFoundException("Player doesn't exists");
         }
         return player;
     }
 
-    /**
-     * Delete a player
-     *
-     * @param id the key of the field to delete
-     */
-    public void delete(String id) {
-        if (redisService.deleteField("players", id) == 0) {
-            throw new ObjectNotFoundException("Player wtih id: " + id + " not found");
-        }
+    public boolean existsById(Long id) {
+        return playerRepository.existsById(id);
     }
 
-    /**
-     * Update player fields
-     *
-     * @param updatedPlayer Update a player accross the collections
-     */
-    public void persistUpdate(Player updatedPlayer) {
-        Player originalPlayer = get(updatedPlayer.getId());
-
-        redisService.updateSortedSetMemberAndHash(
-				String.format(keyFormat, updatedPlayer.getRoomId()),
-				"players",
-				originalPlayer, 
-				updatedPlayer);
+    public Optional<Player> deleteAndGet(Long id) {
+        Optional<Player> player = playerRepository.findById(id);
+        player.ifPresent(playerRepository::delete);
+        return player;
     }
 
-    /**
-     * Increment a player score by the score step
-     *
-     * @param id the player id
-     * @param step the step to increment by
-     */
-    public void incrementScore(String id, Integer step) {
-        // set default value for step
-        if (step == null) {
-            step = 10;
-        }
-        Player player = get(id);
-        player.incrementScore(step);
-        persistUpdate(player);
+    @Transactional
+    public void deleteByRoomId(UUID roomId) {
+        playerRepository.deleteByRoomId(roomId);
     }
 
-    /**
-     * Update a player username
-     *
-     * @param id player id
-     * @param username player username
-     */
-    public void updateUsername(String id, String username) {
-        Player player = get(id);
-        player.setUsername(username);
-        persistUpdate(player);
+    public void createPlayerSession(UUID roomId, Long playerId) {
+        PlayerSession session = new PlayerSession(
+                playerId, 
+                roomId, 
+                System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(WAIT_TIME_MINUTES));  // store expiry time
+        redisService.setValueExp(RedisKeys.formatPlayerSessionKey(playerId), session, WAIT_TIME_MINUTES, TimeUnit.MINUTES);
     }
 
-    /**
-     * Update a player field(s) using the dto passed
-     *
-     * @param player the player to update
-     * @param playerDto the dto containing the updated fiels
-     */
-    public void updateFromDto(Player player, PlayerDto playerDto) {
-        Optional.ofNullable(playerDto.getUsername()).ifPresent(player::setUsername);
-        Optional.ofNullable(playerDto.getScore()).ifPresent(player::setScore);
-        persistUpdate(player);
+    public void incrementScore(UUID roomId, Long playerId, Double delta) {
+        redisService.incrementValue(RedisKeys.formatRoomPlayersKey(roomId), playerId, delta);
     }
 
-	/**
-	 * Delete a player 
-	 *
-	 * @param roomId The room id
-	 * @param player The player
-	 */
-    public void persistDelete(String roomId, Player player) {
-
-        redisService.deleteMemberFromSortedSetAndHash(
-                String.format(keyFormat, roomId), "players", player);
+    public String getName(UUID roomId, Long playerId) {
+        return (String) redisService.getField(RedisKeys.formatRoomKey(roomId), RedisKeys.formatPlayerNameKey(playerId));
     }
 
-	/**
-	 * Retrieves the list of players in a specified room, sorted in the given order.
-	 *
-	 * @param order  the sorting order, either "asc" for ascending or "desc" for descending
-	 * @param roomId the unique identifier of the room
-     *
-     * @return the list of players in descending or ascending order
-	 */
-    public List<Player> getPlayersOrderBy(String order, String roomId) {
-        return redisService.getSortedSet(order, String.format(keyFormat, roomId))
+    public List<Long> getPlayersIdOrderBy(String order, UUID roomId) {
+        return redisService.getSortedSet(order, RedisKeys.formatRoomPlayersKey(roomId))
             .stream()
-            .map(obj -> (Player) obj)
+            .map(obj ->  Long.valueOf(obj.toString()))
             .collect(Collectors.toList());
     }
+
+
+    public List<PlayerDto> getPlayers(String order, UUID roomId) {
+        // Fetch the sorted set of player IDs and their scores
+        Set<ZSetOperations.TypedTuple<Object>> playerIdsWithScores = 
+            redisService.getSortedSetWithScores(order, RedisKeys.formatRoomPlayersKey(roomId));
+
+        // Extract player IDs and scores from the sorted set
+        List<Long> playerIds = new ArrayList<>();
+        List<Double> scores = new ArrayList<>();
+        for (ZSetOperations.TypedTuple<Object> obj : playerIdsWithScores) {
+            playerIds.add(Long.valueOf(obj.getValue().toString()));  // Player ID
+            scores.add(obj.getScore());  // Score
+        }
+
+
+        // Generate the keys for the player's name and lost status fields
+        List<Object> fields = new ArrayList<>();
+        for (Long playerId : playerIds) {
+            fields.add(RedisKeys.formatPlayerNameKey(playerId));
+            fields.add(RedisKeys.formatPlayerLostStatus(playerId));
+        }
+
+
+        List<Object> fieldValues = redisService.getFields(RedisKeys.formatRoomKey(roomId), fields);
+        // Map the values to PlayerDto objects
+        List<PlayerDto> players = new ArrayList<>();
+        for (int i = 0; i < playerIds.size(); i++) {
+            Long playerId = playerIds.get(i);
+            String name = (String) fieldValues.get(i * 2); // name
+            Boolean lost = (Boolean) fieldValues.get(i * 2 + 1); // lost status
+            Double score = scores.get(i) * scoreUnit; // score from the sorted set
+            players.add(new PlayerDto(Long.valueOf(playerId), name, score, lost));
+        }
+
+        return players;
+    }
+
+    // public List<PlayerDto> getPlayers(String order, UUID roomId) {
+    //     return redisService.getSortedSetWithScores(order, )
+    //         .stream()
+    //         .map(obj ->  {
+    //             Long playerId = Long.valueOf(obj.getValue().toString());
+    //             String name = (String) redisService.getField(RedisKeys.formatRoomKey(roomId), 
+    //                             RedisKeys.formatPlayerNameKey(playerId));
+    //             Boolean lost = (Boolean) redisService.getField(RedisKeys.formatRoomKey(roomId),
+    //                     RedisKeys.formatPlayerLostStatus(playerId));
+    //             return new PlayerDto(playerId, name, obj.getScore(), lost);
+    //         })
+    //         .collect(Collectors.toList());
+    // }
 }

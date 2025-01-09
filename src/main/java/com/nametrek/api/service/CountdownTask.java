@@ -3,9 +3,16 @@ package com.nametrek.api.service;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
 public class CountdownTask {
-    private final ScheduledFuture<?> scheduledFuture;
-    private final CompletableFuture<Boolean> countdownCompletion;
+    private ScheduledFuture<?> scheduledFuture;
+    private CompletableFuture<Boolean> countdownCompletion;
 
     public CountdownTask(ScheduledFuture<?> scheduledFuture, CompletableFuture<Boolean> countdownCompletion) {
         this.scheduledFuture = scheduledFuture;

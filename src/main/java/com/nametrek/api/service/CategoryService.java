@@ -12,7 +12,7 @@ public class CategoryService {
 
     private RedisService redisService;
 
-    private String[] categories = {"Animal", "Car", "Country"};
+    private String[] categories = {"animals", "cars", "countries"};
 
     @Autowired
     public CategoryService(RedisService redisService) {
@@ -42,6 +42,6 @@ public class CategoryService {
      * @return true if item is in set otherwise false
      */
     public boolean isItemInCategory(String category, String item) {
-        return redisService.isMemberOfSet(category, item);
+        return redisService.isMemberOfSet(category, item.toLowerCase());
     }
 }
