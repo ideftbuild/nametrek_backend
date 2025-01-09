@@ -1,0 +1,18 @@
+
+        // return countDownService.startCountDown(3, null, count -> {
+        //     sendGameMessage(gameUpdateTopic, "Name name name name", GameEventType.GAME_MESSAGE);
+        // })
+        // .thenRun(() -> {
+        //     System.out.println("Setting the round an in game status");
+        //     String roomKey = RedisKeys.formatRoomKey(roomId);
+        //     redisService.setField(roomKey, RedisKeys.ROUND, round);
+        //     // set in game to true when round starts
+        //     redisService.setField(roomKey, RedisKeys.IN_GAME, true);
+        //
+        // })
+        // .thenCompose(__ -> {
+        //     // String category = chooseCategory();  // Select category at random for each round
+        //     Queue<Long> inGamePlayers = new LinkedList<>(players);
+        //     System.out.println("In game players: " + inGamePlayers);
+        //     return processPlayerTurns(inGamePlayers, roomId, round);
+        // });

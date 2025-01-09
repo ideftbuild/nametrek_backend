@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nametrek.api.utils.CodeGeneratorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-12-30T18:19:51" hostname="akanBox" time="0.013">
+  <properties/>
+  <testcase name="testGenerateCode()" classname="com.nametrek.api.utils.CodeGeneratorTest" time="0.013"/>
+  <system-out><![CDATA[2024-12-30T19:19:51.245+01:00  INFO 57299 --- [Nametrek API] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.nametrek.api.utils.CodeGeneratorTest]: CodeGeneratorTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-12-30T19:19:51.262+01:00  INFO 57299 --- [Nametrek API] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.utils.CodeGeneratorTest
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

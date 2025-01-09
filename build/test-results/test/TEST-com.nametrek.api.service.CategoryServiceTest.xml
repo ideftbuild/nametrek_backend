@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.service.CategoryServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-12-25T17:27:53" hostname="akanBox" time="0.112">
-  <properties/>
-  <testcase name="testIsItemInCategory()" classname="com.nametrek.api.service.CategoryServiceTest" time="0.104"/>
-  <testcase name="testAddItemToCategry()" classname="com.nametrek.api.service.CategoryServiceTest" time="0.007"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
