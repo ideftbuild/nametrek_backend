@@ -10,4 +10,5 @@ public enum GameEventType {
     GAME_MESSAGE,
     LOSS,
     WIN,
+    ANSWER,
 }

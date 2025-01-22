@@ -1,19 +1,24 @@
 package com.nametrek.api.listener;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.nametrek.api.service.RoomService;
 
-@Service
-public class WebSocketEventListener {
+import lombok.extern.slf4j.Slf4j;
 
+@Component
+@Slf4j
+public class WebSocketEventListener {
     private final RoomService roomService;
 
     @Autowired
@@ -23,26 +28,51 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketConnectionListener(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        
-        String sessionId = headerAccessor.getSessionId();
-        String playerId = headerAccessor.getNativeHeader("playerId").get(0);
-        String roomId = headerAccessor.getNativeHeader("roomId").get(0);
+        try {
+            System.out.println("\n****control in connect listener****\n");
+            StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+            String sessionId = headerAccessor.getSessionId();
+            
+            List<String> playerIds = headerAccessor.getNativeHeader("playerId");
+            List<String> roomIds = headerAccessor.getNativeHeader("roomId");
+            
+            if (playerIds == null || roomIds == null || playerIds.isEmpty() || roomIds.isEmpty()) {
+                log.error("Missing required headers. SessionId: {}", sessionId);
+                return;
+            }
 
-        headerAccessor.getSessionAttributes().put("playerId", playerId);
-        headerAccessor.getSessionAttributes().put("roomId", roomId);
+            String playerId = playerIds.get(0);
+            String roomId = roomIds.get(0);
+            
+            log.info("New WebSocket connection - SessionId: {}, PlayerId: {}, RoomId: {}", 
+                    sessionId, playerId, roomId);
 
-        roomService.connect(sessionId, UUID.fromString(roomId), Long.valueOf(playerId));
+            headerAccessor.getSessionAttributes().put("playerId", playerId);
+            headerAccessor.getSessionAttributes().put("roomId", roomId);
+            
+            roomService.connect(sessionId, UUID.fromString(roomId), Long.valueOf(playerId));
+        } catch (Exception e) {
+            log.error("Error in WebSocket connection handling", e);
+        }
     }
 
     @EventListener
     public void handleWebSocketDisconnectionListener(SessionDisconnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        try {
+            System.out.println("\n****control in disconnect listener****\n");
+            StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+            String sessionId = headerAccessor.getSessionId();
+            String playerId = (String) headerAccessor.getSessionAttributes().get("playerId");
+            String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+            
+            log.info("WebSocket disconnection - SessionId: {}, PlayerId: {}, RoomId: {}", 
+                    sessionId, playerId, roomId);
 
-        String sessionId = headerAccessor.getSessionId();
-        String playerId = (String) headerAccessor.getSessionAttributes().get("playerId");
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-
-        roomService.disconnect(UUID.fromString(roomId), Long.valueOf(playerId));
+            if (roomId != null && playerId != null) {
+                roomService.disconnect(UUID.fromString(roomId), Long.valueOf(playerId));
+            }
+        } catch (Exception e) {
+            log.error("Error in WebSocket disconnection handling", e);
+        }
     }
 }

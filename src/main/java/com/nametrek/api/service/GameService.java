@@ -1,8 +1,11 @@
 package com.nametrek.api.service;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -17,6 +20,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.processing.Completions;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -54,7 +58,7 @@ public class GameService {
     private final String[] categories; 
     private final PlayerService playerService;
     private final Integer scoreStep = 10;
-    public final RedisService redisService;
+    private final RedisService redisService;
     private final CountDownService countDownService;
     private final Integer ANSWER_COUNTDOWN = 15;
 
@@ -85,20 +89,19 @@ public class GameService {
         if (Boolean.TRUE.equals((Boolean) redisService.getField(RedisKeys.formatRoomKey(roomId), RedisKeys.IN_GAME))) {
             throw new GameAlreadyStartedException("A game is already in progress. Finish it before starting a new one.");
         }
-
-		System.out.println("Before getting room: " + roomId);
         Room room = roomService.getRoomById(roomId);
-        List<Long> playersId = playerService.getPlayersIdOrderBy("DESC", roomId);
-		System.out.println("After getting room");
 
 		FormattedKeysAndTopics keysAndTopics = new FormattedKeysAndTopics();
 		keysAndTopics.setKeysAndTopics(roomId);
 
-		String gameUpdateTopic = keysAndTopics.getGameUpdateTopic();
-		String roomKey = keysAndTopics.getRoomKey();
+		String gameUpdateTopic = keysAndTopics.gameUpdateTopic;
+		String roomKey = keysAndTopics.roomKey;
 		GameInfo gameInfo = new GameInfo(roomId);
 
-		redisService.setField(roomKey, RedisKeys.IN_GAME, true);
+		if (redisService.sortedSetLength(keysAndTopics.inGamePlayersKey) < 2) {
+			System.out.println("Throwing IllegalArgumentException exception");
+			throw new IllegalArgumentException("Atleast two players must be present in the room");
+		}
         sendGameStartMessage(gameUpdateTopic, roomId);
 
         AtomicInteger rounds = new AtomicInteger(1);
@@ -109,9 +112,9 @@ public class GameService {
             Integer round = rounds.getAndIncrement();
             if (round <= room.getRounds()) {
 				gameInfo.setRound(round);
-                startRound(playersId, gameInfo, keysAndTopics).join();
+                startRound(gameInfo, keysAndTopics).join();
             } else {
-				resetGame(keysAndTopics, roomId);
+				resetGame(keysAndTopics, gameInfo);
                 scheduler.shutdown();
             }
         }, 0, 15, TimeUnit.SECONDS);
@@ -123,19 +126,24 @@ public class GameService {
      * @param keysAndTopics Stores game keys and topics
 	 * @param roomId The room id
 	 */
-	private void resetGame(FormattedKeysAndTopics keysAndTopics, UUID roomId) {
-		String roomKey = keysAndTopics.getRoomKey();
-		redisService.setField(roomKey, RedisKeys.ROUND, 0);
-		redisService.setField(roomKey, RedisKeys.IN_GAME, false);
-		List<PlayerDto> players = playerService.getPlayers("DESC", roomId);
+	private void resetGame(FormattedKeysAndTopics keysAndTopics, GameInfo gameInfo) {
+		String roomKey = keysAndTopics.roomKey;
+		UUID roomId = gameInfo.getRoomId();
+
+		Map<String, Object> fields = new HashMap<>();
+		fields.put(RedisKeys.ROUND, 0);
+		fields.put(RedisKeys.IN_GAME, false);
+
+		redisService.setFields(roomKey, fields);
+		List<PlayerDto> players = playerService.getPlayers("DESC", gameInfo.getRoomId());
 
 		players.forEach((player) -> {
 			player.setLost(false);
 		});
-		sendGameEndMessage(keysAndTopics.getGameUpdateTopic(), players);
 
+		sendGameEndMessage(keysAndTopics.gameUpdateTopic, players);
 		players.forEach((player) -> {
-			redisService.addToSortedSet(keysAndTopics.getRoomPlayerKey(), player.getId(), 0D);
+			redisService.addToSortedSet(keysAndTopics.inGamePlayersKey, player.getId(), 0D);
 		});
 	}
 
@@ -148,9 +156,10 @@ public class GameService {
      *
      * @return A promise to resolve when the round is completed
      */
-    public CompletableFuture<Void> startRound(List<Long> players, GameInfo gameInfo, FormattedKeysAndTopics keysAndTopics) {
+    public CompletableFuture<Void> startRound(GameInfo gameInfo, FormattedKeysAndTopics keysAndTopics) {
 		keysAndTopics.setUsedAnswerKey(gameInfo.getRoomId(), gameInfo.getRound());
-        String gameUpdateTopic = keysAndTopics.getGameUpdateTopic();
+		redisService.setField(keysAndTopics.roomKey, RedisKeys.IN_GAME, true);
+        String gameUpdateTopic = keysAndTopics.gameUpdateTopic;
 
         try {
             Thread.sleep(2000);  // wait 2 seconds before starting round
@@ -167,9 +176,10 @@ public class GameService {
             //TODO: handle exception
 			return null;
         }
-		redisService.setField(keysAndTopics.getRoomKey(), RedisKeys.ROUND, gameInfo.getRound());
+		redisService.setField(keysAndTopics.roomKey, RedisKeys.ROUND, gameInfo.getRound());
 
-		Queue<Long> inGamePlayers = new LinkedList<>(players);
+
+		Queue<Long> inGamePlayers = playerService.getInGamePlayersIds("DESC", gameInfo.getRoomId());
 		return processPlayerTurns(inGamePlayers, gameInfo, keysAndTopics);
     }
 
@@ -182,39 +192,36 @@ public class GameService {
      *
      * @return A promise that runs on a background process synchronous
      */
+    @Async("asyncExecutor")
     private CompletableFuture<Void> processPlayerTurns(Queue<Long> inGamePlayers, GameInfo gameInfo, FormattedKeysAndTopics keysAndTopics) {
+		try {
+			String category = chooseCategory();
+			QuestionDto questionDto = CreateQuestion(category);
 
-        return CompletableFuture.runAsync(() -> {
-            try {
-				String category = chooseCategory();
-				QuestionDto questionDto = CreateQuestion(category);
+			while (inGamePlayers.size() > 1) {
+				Long player = inGamePlayers.poll();
 
-                while (inGamePlayers.size() > 1) {
-                    Long player = inGamePlayers.poll();
-
+				if (playerService.isInGame(gameInfo.getRoomId(), player)) {
 					gameInfo.setPlayer(player);
-                    redisService.setField(keysAndTopics.getRoomKey(), RedisKeys.PLAYER_TURN, player);
-                    Boolean turnSucess = nextTurn(questionDto, gameInfo, keysAndTopics);
-					// Answer is not passed so share 5 points accross players
-					if (turnSucess == null) {
-						sharePoints(inGamePlayers, gameInfo, keysAndTopics.getAnswerTopic());
-					}
+					redisService.setField(keysAndTopics.roomKey, RedisKeys.PLAYER_TURN, player);
+					Boolean turnSuccess = nextTurn(questionDto, gameInfo, keysAndTopics);
 					// Answer is correct
-                    if (turnSucess) {
-                        inGamePlayers.offer(player);
-                    }
-                    Thread.sleep(1000);  // wait for 1 second before moving to the next player
-                }
+					if (turnSuccess) {
+						inGamePlayers.offer(player);
+					}
+					Thread.sleep(1000);  // wait for 1 second before moving to the next player
+				} 
+			}
 
-				Long player = inGamePlayers.peek();
-				gameInfo.setPlayer(player);
-				celebrateWin(gameInfo, keysAndTopics);
-				Thread.sleep(3000);
-            } catch (Exception e) {
-               // handle exceptions 
-            }
-        });
-
+			Long player = inGamePlayers.peek();
+			gameInfo.setPlayer(player);
+			celebrateWin(gameInfo, keysAndTopics);
+			Thread.sleep(3000);
+		} catch (Exception e) {
+			e.printStackTrace();
+            return CompletableFuture.failedFuture(e);
+		}
+		return CompletableFuture.completedFuture(null);
     }
 
     /**
@@ -230,13 +237,13 @@ public class GameService {
 		Long player = gameInfo.getPlayer();
 
         questionDto.setPlayerId(player);
-        askQuestion(keysAndTopics.getQuestionTopic(), questionDto);
+        askQuestion(keysAndTopics.questionTopic, questionDto);
 
         try {
             Thread.sleep(2000);
             Boolean isAnswerAvailable = countDownService.startCountDown(
 					ANSWER_COUNTDOWN, gameInfo.getRoomId(), currentcount -> {
-                sendGameMessage(keysAndTopics.getGameUpdateTopic(), currentcount, GameEventType.GAME_COUNTDOWN);
+                sendGameMessage(keysAndTopics.gameUpdateTopic, currentcount, GameEventType.GAME_COUNTDOWN);
             }).join();
             Thread.sleep(1000);
 
@@ -245,10 +252,10 @@ public class GameService {
                 : (AnswerDto) redisService.getAndDelete(RedisKeys.formatPlayerAnswerKey(player));
 
 			// player did not answer the question
-            if (answerDto == null || answerDto.getAnswer() == null) {
-				return null;
+            if (answerDto == null || answerDto.getAnswer() == null || answerDto.getAnswer().isEmpty()) {
+				return false;
             }
-			// player is not suppose to answer do nothing
+			// player is not suppose to answer
             if (answerDto.getPlayerId() != player) {
 				return true;
             }
@@ -282,17 +289,20 @@ public class GameService {
 	 * @param gameInfo Contains real time game informations (e.g roomId, round, current player and so on)
 	 */
 	private void celebrateWin(GameInfo gameInfo, FormattedKeysAndTopics keysAndTopics) {
-        String roomKey = keysAndTopics.getRoomKey();
+        String roomKey = keysAndTopics.roomKey;
+        UUID roomId = gameInfo.getRoomId();
 
+        // winner get extra points
+        playerService.incrementScore(roomId, gameInfo.getPlayer(), 0.5);  // 
 		// Reset the round
-        List<PlayerDto> players = playerService.getPlayers("DESC", gameInfo.getRoomId());
+        List<PlayerDto> players = playerService.getPlayers("DESC", roomId);
         players.forEach((player) -> {
             redisService.setField(roomKey, RedisKeys.formatPlayerLostStatus(player.getId()), false);
             player.setLost(false);
         });
 
-		redisService.delete(keysAndTopics.getUsedAnswersKey());
-		sendGameMessage(keysAndTopics.getGameUpdateTopic(), players, GameEventType.ROUND_ENDED);
+		redisService.delete(keysAndTopics.usedAnswersKey);
+		sendGameMessage(keysAndTopics.gameUpdateTopic, players, GameEventType.ROUND_ENDED);
 	}
 
 
@@ -305,25 +315,29 @@ public class GameService {
      * @return true if the answer is correct otherwise false
      */
     private boolean validate(AnswerDto answerDto, QuestionDto questionDto, GameInfo gameInfo, FormattedKeysAndTopics keysAndTopics) {
-        String roomKey = keysAndTopics.getRoomKey();
-		String usedAnswers = keysAndTopics.getUsedAnswersKey();
-        String playerLostStatusKey = RedisKeys.formatPlayerLostStatus(answerDto.getPlayerId());  // can be generaetd here
+		try {
+			sendGameMessage(keysAndTopics.answerTopic, answerDto.getAnswer(), GameEventType.ANSWER);
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        String playerLostStatusKey = RedisKeys.formatPlayerLostStatus(answerDto.getPlayerId());
 
         boolean isCorrect = answerDto.getCategory().equals(questionDto.getCategory())
-							&& !categoryService.isItemInCategory(usedAnswers, answerDto.getAnswer())
+							&& !categoryService.isItemInCategory(keysAndTopics.usedAnswersKey, answerDto.getAnswer())
                             && checkAnswer(answerDto);
 
 		GameEventType type = GameEventType.LOSS; // Default to LOSS
 		if (isCorrect) {
 			playerService.incrementScore(gameInfo.getRoomId(), answerDto.getPlayerId(), 1D);
-			redisService.setField(roomKey, playerLostStatusKey, false);
-			categoryService.addItemToCategory(usedAnswers, answerDto.getAnswer().toLowerCase());
+			redisService.setField(keysAndTopics.roomKey, playerLostStatusKey, false);
+			categoryService.addItemToCategory(keysAndTopics.usedAnswersKey, answerDto.getAnswer().toLowerCase());
 			type = GameEventType.WIN;
 		} else {
-			redisService.setField(roomKey, playerLostStatusKey, true);
+			redisService.setField(keysAndTopics.roomKey, playerLostStatusKey, true);
 		}
 
-		sendGameMessage(keysAndTopics.getAnswerTopic(), playerService.getPlayers("DESC", gameInfo.getRoomId()), type);
+		sendGameMessage(keysAndTopics.answerTopic, playerService.getPlayers("DESC", gameInfo.getRoomId()), type);
         return isCorrect;
     }
 
@@ -342,8 +356,7 @@ public class GameService {
      * @return the category
      */
     private String chooseCategory() {
-        int randomIndex = ThreadLocalRandom.current().nextInt(categories.length);
-        return categories[randomIndex];
+        return categories[ThreadLocalRandom.current().nextInt(categories.length)];
     }
 
     /**
@@ -354,9 +367,7 @@ public class GameService {
      * @return true if name is in category otherwise false
      */
     private boolean checkAnswer(AnswerDto answerDto) {
-		return answerDto.getAnswer() == null
-			? false
-			: categoryService.isItemInCategory(answerDto.getCategory(), answerDto.getAnswer());
+		return categoryService.isItemInCategory(answerDto.getCategory(), answerDto.getAnswer());
     }
 
     /**
@@ -385,7 +396,6 @@ public class GameService {
      * @param answerDto the answer
      */
     public void saveAnswer(AnswerDto answerDto) {
-        System.out.println("storing answer: player is: " + answerDto.getPlayerId());
         redisService.setValueExp(
                 RedisKeys.formatPlayerAnswerKey(answerDto.getPlayerId()),
                 answerDto,
@@ -416,6 +426,10 @@ public class GameService {
 	 */
     public CountDownService getCountDownService() {
         return countDownService;
+    }
+
+    public Long getPlayerTurn(UUID roomId) {
+        return ((Number) redisService.getField(RedisKeys.formatRoomKey(roomId), RedisKeys.PLAYER_TURN)).longValue();
     }
     
 }

@@ -1,7 +1,9 @@
 package com.nametrek.api.service;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -94,14 +96,26 @@ public class RedisService {
     }
 
      
-    // /**
-    //  * Set a field in a hash
-    //  *
-    //  * @param hash The hash
-    //  * @param object The object to set
-    //  */
+    /**
+     * Set a field in a hash
+     *
+     * @param hash The hash
+     * @param object The object to set
+     */
     public <T> void setField(String hash, String key, T object) {
         template.opsForHash().put(hash, key, object);
+    }
+
+    /**
+     * Set multiple fields in a hash
+     *
+     * @param hash The hash
+     * @param fields The fields to set
+     */
+    public void setFields(String hash, Map<String, Object> fields) {
+        if (fields != null && !fields.isEmpty()) {
+            template.opsForHash().putAll(hash, fields);
+        }
     }
 
     //
@@ -176,6 +190,7 @@ public class RedisService {
             return template.opsForZSet().rangeWithScores(key, 0, -1);
         }
     } 
+
     /**
      * Deletes a member from a sorted set.
      *
@@ -285,6 +300,14 @@ public class RedisService {
     public boolean isMemberOfSet(String key, String member) {
         return template.opsForSet().isMember(key, member);
     }
+
+    public Long sortedSetLength(String key) {
+        return template.opsForZSet().size(key);
+    }
+
+    // public Long deleteFields(String key) {
+    //     return template.opsForHash().delete
+    // }
 }
 
 

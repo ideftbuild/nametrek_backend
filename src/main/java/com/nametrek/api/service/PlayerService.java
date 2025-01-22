@@ -1,8 +1,10 @@
 package com.nametrek.api.service;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -89,40 +91,37 @@ public class PlayerService {
     }
 
     public void incrementScore(UUID roomId, Long playerId, Double delta) {
-        redisService.incrementValue(RedisKeys.formatRoomPlayersKey(roomId), playerId, delta);
+        redisService.incrementValue(RedisKeys.formatInGamePlayersKey(roomId), playerId, delta);
     }
 
     public String getName(UUID roomId, Long playerId) {
         return (String) redisService.getField(RedisKeys.formatRoomKey(roomId), RedisKeys.formatPlayerNameKey(playerId));
     }
 
-    public List<Long> getPlayersIdOrderBy(String order, UUID roomId) {
-        return redisService.getSortedSet(order, RedisKeys.formatRoomPlayersKey(roomId))
+    public Queue<Long> getInGamePlayersIds(String order, UUID roomId) {
+        return redisService.getSortedSet(order, RedisKeys.formatInGamePlayersKey(roomId))
             .stream()
             .map(obj ->  Long.valueOf(obj.toString()))
-            .collect(Collectors.toList());
+            .collect(Collectors.toCollection(ArrayDeque::new));
     }
-
 
     public List<PlayerDto> getPlayers(String order, UUID roomId) {
         // Fetch the sorted set of player IDs and their scores
         Set<ZSetOperations.TypedTuple<Object>> playerIdsWithScores = 
-            redisService.getSortedSetWithScores(order, RedisKeys.formatRoomPlayersKey(roomId));
+            redisService.getSortedSetWithScores(order, RedisKeys.formatInGamePlayersKey(roomId));
 
         // Extract player IDs and scores from the sorted set
         List<Long> playerIds = new ArrayList<>();
         List<Double> scores = new ArrayList<>();
         for (ZSetOperations.TypedTuple<Object> obj : playerIdsWithScores) {
-            playerIds.add(Long.valueOf(obj.getValue().toString()));  // Player ID
+            playerIds.add(((Number) obj.getValue()).longValue());
             scores.add(obj.getScore());  // Score
         }
-
 
         // Generate the keys for the player's name and lost status fields
         List<Object> fields = new ArrayList<>();
         for (Long playerId : playerIds) {
-            fields.add(RedisKeys.formatPlayerNameKey(playerId));
-            fields.add(RedisKeys.formatPlayerLostStatus(playerId));
+            fields.addAll(List.of(RedisKeys.formatPlayerNameKey(playerId), RedisKeys.formatPlayerLostStatus(playerId)));
         }
 
 
@@ -140,6 +139,9 @@ public class PlayerService {
         return players;
     }
 
+    public boolean isInGame(UUID roomId, Long playerId) {
+        return redisService.getMemberScore(RedisKeys.formatInGamePlayersKey(roomId), playerId) != null;
+    }
     // public List<PlayerDto> getPlayers(String order, UUID roomId) {
     //     return redisService.getSortedSetWithScores(order, )
     //         .stream()

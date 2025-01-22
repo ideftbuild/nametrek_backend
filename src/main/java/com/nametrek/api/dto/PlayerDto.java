@@ -2,10 +2,9 @@ package com.nametrek.api.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class PlayerDto {
     private Long id;

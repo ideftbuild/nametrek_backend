@@ -1,6 +1,8 @@
 package com.nametrek.api.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,13 +79,14 @@ public class RoomService {
         Player owner = new Player(playerName, room);
         owner.activate();
         owner = playerService.save(owner);
-        String roomKey = RedisKeys.formatRoomKey(room.getId());
-        
-        redisService.setField(roomKey, RedisKeys.ROUND, 0);
-        
-		redisService.setField(roomKey, RedisKeys.OWNER, owner.getId());
 
-        redisService.setField(roomKey, RedisKeys.formatPlayerNameKey(owner.getId()), owner.getName());
+        String roomKey = RedisKeys.formatRoomKey(room.getId());
+        Map<String, Object> fields = new HashMap<>();
+        fields.put(RedisKeys.ROUND, 0);
+        fields.put(RedisKeys.OWNER, owner.getId());
+        fields.put(RedisKeys.formatPlayerNameKey(owner.getId()), owner.getName());
+
+        redisService.setFields(roomKey, fields);
         // Add player to room sorted set
         addPlayerToRoom(room.getId(), owner.getId(), 0d);
 
@@ -93,12 +96,16 @@ public class RoomService {
     @Transactional
     public Player getPlayer(UUID roomId, Long playerId) {
         if (!roomRepository.existsById(roomId)) {
+            System.out.println("Room " + roomId  + " doesn't exists");
             throw new ObjectNotFoundException("Room doesn't exists");
         }
         Player player = playerService.getPlayerById(playerId);
         if (!player.getRoom().getId().equals(roomId)) {
+            System.out.println("Room " + roomId  + " doesn't exists");
             throw new IllegalArgumentException("Player not in room");
         }
+
+        System.out.println("Returning player!");
         return player;
     }
 
@@ -210,7 +217,7 @@ public class RoomService {
     }
     
     public void addPlayerToRoom(UUID roomId, Long playerId, Double score) {
-        redisService.addToSortedSet(RedisKeys.formatRoomPlayersKey(roomId), playerId, score);
+        redisService.addToSortedSet(RedisKeys.formatInGamePlayersKey(roomId), playerId, score);
     }
     
     private EventType handleReconnection(String disconnectedSessionKey, UUID roomId, Long playerId) {
@@ -226,6 +233,7 @@ public class RoomService {
 
     @Transactional
     public void connect(String sessionId, UUID roomId, Long playerId) {
+        System.out.println("\n**** Connect method is called ***\n");
         Room room = getRoomById(roomId);
         String roomKey = RedisKeys.formatRoomKey(roomId);
         if (Boolean.TRUE.equals((Boolean) redisService.getField(roomKey, RedisKeys.IN_GAME))) {
@@ -244,11 +252,13 @@ public class RoomService {
                 roomTopic + roomId, 
                 players, 
                 eventType);
+        System.out.println("success connected and sent the messages to connect clients");
     }
 
 
     @Transactional
     public void disconnect(UUID roomId, Long playerId) {
+        System.out.println("\n**** Disconnect method is called ***\n");
         CompletableFuture.runAsync(() -> {
             if (!roomRepository.existsById(roomId)) {
                 throw new ObjectNotFoundException("Room doesn't exists");
@@ -256,7 +266,7 @@ public class RoomService {
             Player player = playerService.getPlayerById(playerId);
             playerService.createPlayerSession(roomId, playerId);
 
-            String roomPlayersKey = RedisKeys.formatRoomPlayersKey(roomId);
+            String roomPlayersKey = RedisKeys.formatInGamePlayersKey(roomId);
             Double score = redisService.getMemberScore(roomPlayersKey, playerId);
             if (score != null) {
                 player.setScore(score);
@@ -269,13 +279,15 @@ public class RoomService {
                     playerId,
                     playerService.getPlayers("DESC", roomId),
                     EventType.DISCONNECT);
+            System.out.println("success disconnected and sent the messages to connect clients");
             }
         );
     }
 
     @Transactional
     private RoomPlayerInfo joinRoom(Room room, String playerName) {
-        if (playerService.getPlayersIdOrderBy("DESC", room.getId()).size() >= room.getCapacity()) {
+
+        if (redisService.sortedSetLength(RedisKeys.formatInGamePlayersKey(room.getId())) >= room.getCapacity()) {
             throw new RoomFullException("Room is full");
         }
         Player player = new Player(playerName, room);
@@ -351,8 +363,9 @@ public class RoomService {
         // remove player name mapping
         String roomKey = RedisKeys.formatRoomKey(roomId);
         redisService.deleteField(roomKey, RedisKeys.formatPlayerNameKey(playerId));
+        redisService.deleteField(roomKey, RedisKeys.formatPlayerLostStatus(playerId));
 
-        if (playerService.getPlayersIdOrderBy("DESC", roomId).size() <= 0) {
+        if (redisService.sortedSetLength(RedisKeys.formatInGamePlayersKey(roomId)) <= 0) {
 			deleteRoom(roomId);
             redisService.delete(roomKey);
         } else {
@@ -367,6 +380,7 @@ public class RoomService {
     }
 
     public RoomEventResponse getRoomUpdate(UUID roomId, Long playerId) {
+        System.out.println("\nControl in Room update****\n");
         Room room = getRoomById(roomId);
         Player player = playerService.getPlayerById(playerId);
         if (!player.getRoom().getId().equals(roomId)) {

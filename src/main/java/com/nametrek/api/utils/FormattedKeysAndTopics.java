@@ -4,15 +4,14 @@ import java.util.UUID;
 
 import lombok.Getter;
 
-@Getter
 public class FormattedKeysAndTopics {
-    String gameUpdateTopic;
-    String answerTopic;
-    String questionTopic;
-    String gameTopic;
-    String roomKey;
-    String roomPlayerKey;
-    String usedAnswersKey;
+    public String gameUpdateTopic;
+    public String answerTopic;
+    public String questionTopic;
+    public String gameTopic;
+    public String roomKey;
+    public String inGamePlayersKey;
+    public String usedAnswersKey;
     // other topics
 
     public FormattedKeysAndTopics() {
@@ -34,7 +33,7 @@ public class FormattedKeysAndTopics {
 
     public void setKeys(UUID roomId) {
         this.roomKey = RedisKeys.formatRoomKey(roomId);
-        this.roomPlayerKey = RedisKeys.formatRoomPlayersKey(roomId);
+        this.inGamePlayersKey = RedisKeys.formatInGamePlayersKey(roomId);
     }
 
     public void setTopics(UUID roomId) {
@@ -45,7 +44,7 @@ public class FormattedKeysAndTopics {
 
     public void setKeysAndTopics(UUID roomId) {
         this.roomKey = RedisKeys.formatRoomKey(roomId);
-        this.roomPlayerKey = RedisKeys.formatRoomPlayersKey(roomId);
+        this.inGamePlayersKey = RedisKeys.formatInGamePlayersKey(roomId);
         this.gameUpdateTopic = TopicsFormatter.formatGameUpdateTopic(roomId);
         this.answerTopic  = TopicsFormatter.formatAnswerTopic(roomId);
         this.questionTopic = TopicsFormatter.formatQuestionTopic(roomId);

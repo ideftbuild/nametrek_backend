@@ -17,7 +17,7 @@ public final class RedisKeys {
     // Room related keys
     public static final String ROOM = "rooms:";
     public static final String ROOM_CODE = "room:code";
-    public static final String ROOM_PLAYERS = "rooms:%s:players";
+    public static final String IN_GAME_PLAYERS_KEY = "rooms:%s:players";
     public static final String ROUND = "round";
     public static final String OWNER = "owner";
     public static final String COUNT_DOWN_TASK = "answer:countdown:task:";
@@ -46,8 +46,8 @@ public final class RedisKeys {
         return ROOM_CODE + code;
     }
 
-    public static String formatRoomPlayersKey(UUID roomId) {
-        return String.format(ROOM_PLAYERS, roomId);
+    public static String formatInGamePlayersKey(UUID roomId) {
+        return String.format(IN_GAME_PLAYERS_KEY, roomId);
     }
 
     public static String formatPlayerAnswerKey(Long playerId) {

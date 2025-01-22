@@ -7,17 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class CodeGeneratorTest {
-
-    @Autowired
-    private CodeGenerator codeGenerator;
 
     @Test
     public void testGenerateCode() {
-        String code = codeGenerator.generateCode();
+        String code = CodeGenerator.generateCode();
         assertInstanceOf(String.class, code);
         assertEquals(code.length(), 8);
     }
