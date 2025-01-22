@@ -5,6 +5,9 @@ if [ -f .env ]; then
 	echo "Loading environment variables from .env file..."
 	export $(cat .env | grep -v '#')
 
+	echo "Variables: "
+	echo $GMAIL_USERNAME
+	echo $GMAIL_PASSWORD
 	# start the server
 	./gradlew bootRun
 else 

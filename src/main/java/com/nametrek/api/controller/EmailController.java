@@ -28,7 +28,6 @@ public class EmailController {
 
     @PostMapping("/contact")
     public ResponseEntity<String> sendEmail(@RequestBody @Valid EmailRequest request) {
-		System.out.println("Request received: " + request);
         emailService.sendMailAsync(request.getTo(), request.getEmail(), request.getSubject(), request.getText())
             .exceptionally(throwable -> {
                 // Log the error but don't block the response

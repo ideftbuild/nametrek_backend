@@ -29,7 +29,6 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectionListener(SessionConnectEvent event) {
         try {
-            System.out.println("\n****control in connect listener****\n");
             StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
             String sessionId = headerAccessor.getSessionId();
             
@@ -59,7 +58,6 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectionListener(SessionDisconnectEvent event) {
         try {
-            System.out.println("\n****control in disconnect listener****\n");
             StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
             String sessionId = headerAccessor.getSessionId();
             String playerId = (String) headerAccessor.getSessionAttributes().get("playerId");

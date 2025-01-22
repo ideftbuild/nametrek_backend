@@ -99,7 +99,6 @@ public class GameService {
 		GameInfo gameInfo = new GameInfo(roomId);
 
 		if (redisService.sortedSetLength(keysAndTopics.inGamePlayersKey) < 2) {
-			System.out.println("Throwing IllegalArgumentException exception");
 			throw new IllegalArgumentException("Atleast two players must be present in the room");
 		}
         sendGameStartMessage(gameUpdateTopic, roomId);

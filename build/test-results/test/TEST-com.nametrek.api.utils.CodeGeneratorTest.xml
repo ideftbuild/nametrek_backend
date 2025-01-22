@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.utils.CodeGeneratorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-01-22T13:53:03" hostname="akanBox" time="0.265">
+<testsuite name="com.nametrek.api.utils.CodeGeneratorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-01-22T17:52:13" hostname="akanBox" time="0.096">
   <properties/>
-  <testcase name="testGenerateCode()" classname="com.nametrek.api.utils.CodeGeneratorTest" time="0.265"/>
+  <testcase name="testGenerateCode()" classname="com.nametrek.api.utils.CodeGeneratorTest" time="0.096"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

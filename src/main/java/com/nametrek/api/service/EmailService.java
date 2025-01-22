@@ -3,6 +3,7 @@ package com.nametrek.api.service;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
 	private JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
 	@Autowired
 	public EmailService(JavaMailSender mailSender) {
@@ -24,6 +28,7 @@ public class EmailService {
         try {
             String formattedMessage = String.format("Contact Email: %s%nMessage: %s", senderEmail, text);
             SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(formattedMessage);
@@ -31,6 +36,7 @@ public class EmailService {
             mailSender.send(message);
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
+            e.printStackTrace();
             return CompletableFuture.failedFuture(e);
         }
 	}

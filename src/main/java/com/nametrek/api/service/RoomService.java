@@ -96,16 +96,13 @@ public class RoomService {
     @Transactional
     public Player getPlayer(UUID roomId, Long playerId) {
         if (!roomRepository.existsById(roomId)) {
-            System.out.println("Room " + roomId  + " doesn't exists");
             throw new ObjectNotFoundException("Room doesn't exists");
         }
         Player player = playerService.getPlayerById(playerId);
         if (!player.getRoom().getId().equals(roomId)) {
-            System.out.println("Room " + roomId  + " doesn't exists");
             throw new IllegalArgumentException("Player not in room");
         }
 
-        System.out.println("Returning player!");
         return player;
     }
 
@@ -233,7 +230,6 @@ public class RoomService {
 
     @Transactional
     public void connect(String sessionId, UUID roomId, Long playerId) {
-        System.out.println("\n**** Connect method is called ***\n");
         Room room = getRoomById(roomId);
         String roomKey = RedisKeys.formatRoomKey(roomId);
         if (Boolean.TRUE.equals((Boolean) redisService.getField(roomKey, RedisKeys.IN_GAME))) {
@@ -252,13 +248,11 @@ public class RoomService {
                 roomTopic + roomId, 
                 players, 
                 eventType);
-        System.out.println("success connected and sent the messages to connect clients");
     }
 
 
     @Transactional
     public void disconnect(UUID roomId, Long playerId) {
-        System.out.println("\n**** Disconnect method is called ***\n");
         CompletableFuture.runAsync(() -> {
             if (!roomRepository.existsById(roomId)) {
                 throw new ObjectNotFoundException("Room doesn't exists");
@@ -279,7 +273,6 @@ public class RoomService {
                     playerId,
                     playerService.getPlayers("DESC", roomId),
                     EventType.DISCONNECT);
-            System.out.println("success disconnected and sent the messages to connect clients");
             }
         );
     }
@@ -357,7 +350,6 @@ public class RoomService {
      * @param playerId the player id
      */
     public void leave(UUID roomId, Long playerId) {
-        System.out.println("leave is called for clean up");
         Player player = playerService.deleteAndGet(playerId).orElse(null);
 
         // remove player name mapping
@@ -380,7 +372,6 @@ public class RoomService {
     }
 
     public RoomEventResponse getRoomUpdate(UUID roomId, Long playerId) {
-        System.out.println("\nControl in Room update****\n");
         Room room = getRoomById(roomId);
         Player player = playerService.getPlayerById(playerId);
         if (!player.getRoom().getId().equals(roomId)) {
@@ -390,7 +381,6 @@ public class RoomService {
         Integer round = (Integer) redisService.getField(roomKey, RedisKeys.ROUND);
         List<PlayerDto> players = playerService.getPlayers("DESC", roomId);
 		Long owner = Long.valueOf(redisService.getField(roomKey, RedisKeys.OWNER).toString());
-        System.out.println("All players gotten are: " + players);
 
         return new RoomEventResponse(new RoomDto(round, room.getRounds(), room.getCapacity(), owner), players, EventType.GET);
     }

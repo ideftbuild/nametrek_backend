@@ -24,7 +24,6 @@ public class CountDownService {
     private final ScheduledExecutorService scheduler;
 
     public CountDownService() {
-        System.out.println("creating an instance of scheduler");
         this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
@@ -76,8 +75,6 @@ public class CountDownService {
         if (roomId != null) {
             CountdownTask newTask = new CountdownTask(future, countdownCompletion);
             countDownTasks.put(roomId, newTask);
-            System.out.println("Storing count down task in hash with key: " + roomId);
-            System.out.println("After storing: " + countDownTasks);
         }
 
         return countdownCompletion;
@@ -89,10 +86,8 @@ public class CountDownService {
      * @param roomId the roomId
      */
     public void stopCountDown(UUID roomId) {
-        System.out.println("Stop count down is called");
         // CountdownTask countdownTask = countDownTasks.get(roomId);
 		try {
-			System.out.println("count down tasks are : " + countDownTasks);
 			CountdownTask countdownTask = countDownTasks.remove(roomId);
 			if (countdownTask != null) {
 				countdownTask.cancel();
