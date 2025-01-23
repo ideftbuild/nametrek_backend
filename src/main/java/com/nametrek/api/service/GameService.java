@@ -252,6 +252,8 @@ public class GameService {
 
 			// player did not answer the question
             if (answerDto == null || answerDto.getAnswer() == null || answerDto.getAnswer().isEmpty()) {
+				redisService.setField(keysAndTopics.roomKey, RedisKeys.formatPlayerLostStatus(questionDto.getPlayerId()), true);
+				sendGameMessage(keysAndTopics.answerTopic, playerService.getPlayers("DESC", gameInfo.getRoomId()), GameEventType.LOSS);
 				return false;
             }
 			// player is not suppose to answer
