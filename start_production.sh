@@ -2,8 +2,8 @@
 
 # Check if the .env file exists
 if [ -f .env ]; then
-	echo "Loading environment variables from .env file..."
 	export $(cat .env | grep -v '#')
+	echo "Loaded environment variables from .env file..."
 
 	# start the server
 	./gradlew build
