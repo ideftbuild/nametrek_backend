@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - RoomServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>RoomServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.nametrek.api.service.html">com.nametrek.api.service</a> &gt; RoomServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">15</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">1</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1.520s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox failures" id="successRate">
+<div class="percent">93%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Failed tests</a>
+</li>
+<li>
+<a href="#tab1">Tests</a>
+</li>
+<li>
+<a href="#tab2">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Failed tests</h2>
+<div class="test">
+<a name="testGetRoomUpdate()"></a>
+<h3 class="failures">testGetRoomUpdate()</h3>
+<span class="code">
+<pre>org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed
+
+	at app//com.nametrek.api.service.RoomServiceTest.testGetRoomUpdate(RoomServiceTest.java:432)
+	at java.base@21.0.6/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
+</pre>
+</span>
+</div>
+</div>
+<div id="tab1" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testAddPlayerToRoom()</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testConnect()</td>
+<td class="success">0.042s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testCreate()</td>
+<td class="success">0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testDeleteRoom()</td>
+<td class="success">0.050s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testExistsById()</td>
+<td class="success">0.041s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testGetOwner()</td>
+<td class="success">0.092s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testGetPlayer()</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testGetRoomByCode()</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testGetRoomById()</td>
+<td class="success">0.026s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="failures">testGetRoomUpdate()</td>
+<td class="failures">0.909s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="success">testJoinRoomByCode()</td>
+<td class="success">0.031s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testJoinRoomById()</td>
+<td class="success">0.033s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testLeave()</td>
+<td class="success">0.103s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testLeaveWhenRoomIsEmpty()</td>
+<td class="success">0.056s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testReconnect()</td>
+<td class="success">0.055s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>roomId: c0a9361c-9eb8-439c-9a7c-9dba9fb10fe4
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at Feb 22, 2025, 3:12:17 AM</p>
+</div>
+</div>
+</body>
+</html>

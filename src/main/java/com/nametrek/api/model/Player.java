@@ -53,6 +53,10 @@ public class Player {
         this.room = room;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
     public void activate() {
         this.status = EventType.ACTIVE;
     }

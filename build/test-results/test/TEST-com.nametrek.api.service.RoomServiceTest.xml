@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nametrek.api.service.RoomServiceTest" tests="15" skipped="0" failures="1" errors="0" timestamp="2025-02-22T02:11:40" hostname="akanBox" time="1.607">
+  <properties/>
+  <testcase name="testGetRoomUpdate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.909">
+    <failure message="org.mockito.exceptions.misusing.UnfinishedStubbingException: &#10;Unfinished stubbing detected here:&#10;-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)&#10;&#10;E.g. thenReturn() may be missing.&#10;Examples of correct stubbing:&#10;    when(mock.isOk()).thenReturn(true);&#10;    when(mock.isOk()).thenThrow(exception);&#10;    doThrow(exception).when(mock).someVoidMethod();&#10;Hints:&#10; 1. missing thenReturn()&#10; 2. you are trying to stub a final method, which is not supported&#10; 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed&#10;" type="org.mockito.exceptions.misusing.UnfinishedStubbingException">org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed
+
+	at app//com.nametrek.api.service.RoomServiceTest.testGetRoomUpdate(RoomServiceTest.java:432)
+	at java.base@21.0.6/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="testGetOwner()" classname="com.nametrek.api.service.RoomServiceTest" time="0.092"/>
+  <testcase name="testLeave()" classname="com.nametrek.api.service.RoomServiceTest" time="0.103"/>
+  <testcase name="testJoinRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.033"/>
+  <testcase name="testLeaveWhenRoomIsEmpty()" classname="com.nametrek.api.service.RoomServiceTest" time="0.056"/>
+  <testcase name="testExistsById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.041"/>
+  <testcase name="testConnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.042"/>
+  <testcase name="testDeleteRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.05"/>
+  <testcase name="testGetRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.026"/>
+  <testcase name="testCreate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.035"/>
+  <testcase name="testGetPlayer()" classname="com.nametrek.api.service.RoomServiceTest" time="0.017"/>
+  <testcase name="testJoinRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.031"/>
+  <testcase name="testReconnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.055"/>
+  <testcase name="testAddPlayerToRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.013"/>
+  <testcase name="testGetRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.017"/>
+  <system-out><![CDATA[roomId: c0a9361c-9eb8-439c-9a7c-9dba9fb10fe4
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

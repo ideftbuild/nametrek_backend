@@ -59,11 +59,11 @@ public class RoomService {
         this.notificationService = notificationService;
     }
 
-    private Player getOwner(Room room) {
+    public Player getOwner(Room room) {
         return playerService.getPlayerByRoom(room);
     }
 
-    private Room getRoomByCode(String code) {
+    public Room getRoomByCode(String code) {
         return roomRepository.findByCode(code).orElseThrow(() -> new ObjectNotFoundException("Room doesn't exists"));
     }
 
@@ -106,105 +106,6 @@ public class RoomService {
         return player;
     }
 
- //    @Autowired
- //    public RoomService(
- //            RedisService redisService,
- //            PlayerService playerService, 
- //            NotificationService notificationService,
- //            CodeGenerator codeGenerator) {
- //        this.redisService = redisService;
- //        this.playerService = playerService;
- //        this.notificationService = notificationService;
- //        this.codeGenerator = codeGenerator;
- //    }
- //    
- //    public void setRoomCodeMapping(String roomCode, String roomId) {
- //        redisService.setValue("room:" + roomCode, roomId);
- //    }
-	//
-	//
-    public String getRoomIdByCode(String code) {
-        String roomId = (String) redisService.getValue(RedisKeys.formatRoomCodeKey(code));
-        if (roomId == null) {
-            throw new IllegalAccessError("Room doesn't exist");
-        }
-        return roomId;
-    }
-        
- //    /**
- //     * Update a Room field such as it current round and number of active players
- //     *
- //     * @param roomId id of the room
- //     * @param roomDto Object use to update the room
- //     */
- //    public void update(String roomId, RoomDto roomDto) {
- //        Room room = get(roomId);
-	//
- //        Optional.ofNullable(roomDto.getCurrentRound()).ifPresent(room::setCurrentRound);
- //        Optional.ofNullable(roomDto.getActivePlayerCount()).ifPresent(room::setActivePlayerCount);
-	//
- //        save(room);
- //    }
-	//
- //    /**
- //     * Save Room
- //     */
- //    public void save(Room room) {
- //        redisService.setField("rooms", room);
- //    }
-	//
- //    /**
- //     * Get a room based on it key
- //     * @param key The key used to retrieve the room
- //     */
- //    public Room get(String key) {
- //        Room room = (Room) redisService.getField("rooms", key);
- //        if (room == null) {
- //            throw new ObjectNotFoundException("Room with " + key + " not found");
- //        }
- //        return room;
- //    }
-	//
- //    /**
- //     * Delete a Room
- //     *
- //     * @param id The key used to retrieve the room
- //     */
- //    public void delete(String roomId) {
- //        playerService.getPlayersOrderBy("ASC", roomId).forEach(player -> {
- //            playerService.persistDelete(roomId, player);
- //        });;
- //        String roomCode = get(roomId).getCode();
- //        if (redisService.deleteField("rooms", roomId) == 0) {
- //            throw new ObjectNotFoundException("Failed to delete Room with id: " + roomId);
- //        }
- //        redisService.delete("room:" + roomCode);
- //    }
-	//
-	// /**
-	//  * Creates a new room and adds the player who created it as the first member.
-	//  *
-	//  * @param playerName the name of the player creating the room
- //     *
- //     * @return A object containing the room, player, event type and timestamp of the room creation
-	//  */
- //    public RoomEventResponse create(String playerName, Integer maxRounds) {
- //        Room room = new Room(maxRounds);
- //        
- //        Player player = playerService.create(playerName, room.getId());
-	//
- //        room.incrementPlayerCount();
- //        room.setCode(codeGenerator.generateCode());
- //        room.setOwner(player.getId());
-	//
- //        save(room);
- //        setRoomCodeMapping(room.getCode(), room.getId());
-	//
- //        redisService.addToSortedSet(setKey(room.getId()), player, player.getScore());
- //        return new RoomEventResponse(room, player, EventType.CREATE, LocalDateTime.now().toString());
- //    }
-	//
-
     public Room getRoomById(UUID id) {
         Room room = roomRepository.findById(id).orElse(null);
         if (room == null) {
@@ -243,36 +144,35 @@ public class RoomService {
         Integer round = (Integer) redisService.getField(roomKey, RedisKeys.ROUND);
         List<PlayerDto> players = playerService.getPlayers("DESC", roomId);
 
-        notificationService.sendConnectMessage(
-                playerId,
-                roomTopic + roomId, 
-                players, 
-                eventType);
+
+
+        notificationService.sendMessageToTopic(
+                roomTopic + roomId,
+                new RoomEventResponse(playerId, players, eventType));
     }
 
 
     @Transactional
     public void disconnect(UUID roomId, Long playerId) {
         CompletableFuture.runAsync(() -> {
+            System.out.println("Control is in disconnect method");
             if (!roomRepository.existsById(roomId)) {
                 throw new ObjectNotFoundException("Room doesn't exists");
             }
             Player player = playerService.getPlayerById(playerId);
             playerService.createPlayerSession(roomId, playerId);
 
-            String roomPlayersKey = RedisKeys.formatInGamePlayersKey(roomId);
-            Double score = redisService.getMemberScore(roomPlayersKey, playerId);
+            String inGamePlayersKey = RedisKeys.formatInGamePlayersKey(roomId);
+            Double score = redisService.getMemberScore(inGamePlayersKey, playerId);
             if (score != null) {
                 player.setScore(score);
                 playerService.save(player);  // persist player score
             }
-            redisService.deleteMemberFromSortedSet(roomPlayersKey, playerId);
+            redisService.deleteMemberFromSortedSet(inGamePlayersKey, playerId);
             
-            notificationService.sendDisconnectMessage(
+            notificationService.sendMessageToTopic(
                     roomTopic + roomId,
-                    playerId,
-                    playerService.getPlayers("DESC", roomId),
-                    EventType.DISCONNECT);
+                    new RoomEventResponse(playerId, playerService.getPlayers("DESC", roomId), EventType.DISCONNECT));
             }
         );
     }
@@ -285,7 +185,7 @@ public class RoomService {
         }
         Player player = new Player(playerName, room);
         player.activate();
-        playerService.save(player);
+        player = playerService.save(player);
 
         redisService.setField
             (RedisKeys.formatRoomKey(room.getId()),
@@ -362,11 +262,9 @@ public class RoomService {
             redisService.delete(roomKey);
         } else {
             if (player != null && player.getRoom().getId().equals(roomId)) {
-                notificationService.sendDisconnectMessage(
+                notificationService.sendMessageToTopic(
                         roomTopic + roomId,
-                        playerId,
-                        playerService.getPlayers("DESC", roomId),
-                        EventType.LEAVE);
+                        new RoomEventResponse(playerId, playerService.getPlayers("DESC", roomId), EventType.LEAVE));
             }
         }
     }
@@ -380,7 +278,7 @@ public class RoomService {
 		String roomKey = RedisKeys.formatRoomKey(roomId);
         Integer round = (Integer) redisService.getField(roomKey, RedisKeys.ROUND);
         List<PlayerDto> players = playerService.getPlayers("DESC", roomId);
-		Long owner = Long.valueOf(redisService.getField(roomKey, RedisKeys.OWNER).toString());
+		Long owner = ((Number) (redisService.getField(roomKey, RedisKeys.OWNER))).longValue();
 
         return new RoomEventResponse(new RoomDto(round, room.getRounds(), room.getCapacity(), owner), players, EventType.GET);
     }

@@ -34,18 +34,4 @@ public class NotificationService {
     public <T> void sendMessageToTopic(String topic, T message) {
         messagingTemplate.convertAndSend(topic, message);
     }
-
-    public void sendDisconnectMessage(String topic, Long playerId, List<PlayerDto> players, EventType eventType) {
-        // notifiy other clients n the connection
-        messagingTemplate.convertAndSend(topic, new RoomEventResponse(playerId, players, eventType));
-    }
-
-    public void sendConnectMessage(
-            Long playerId,
-            String topic, 
-            List<PlayerDto> players,
-            EventType eventType) {
-        // notifiy other clients n the connection
-        messagingTemplate.convertAndSend(topic, new RoomEventResponse(playerId, players, eventType));
-    }
 }

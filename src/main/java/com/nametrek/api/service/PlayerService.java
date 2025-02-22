@@ -59,20 +59,20 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public Player getPlayerById(Long id) {
-        Player player = playerRepository.findById(id).orElse(null);
+    public Player getPlayerById(Long playerId) {
+        Player player = playerRepository.findById(playerId).orElse(null);
         if (player == null) {
             throw new ObjectNotFoundException("Player doesn't exists");
         }
         return player;
     }
 
-    public boolean existsById(Long id) {
-        return playerRepository.existsById(id);
+    public boolean existsById(Long playerId) {
+        return playerRepository.existsById(playerId);
     }
 
-    public Optional<Player> deleteAndGet(Long id) {
-        Optional<Player> player = playerRepository.findById(id);
+    public Optional<Player> deleteAndGet(Long playerId) {
+        Optional<Player> player = playerRepository.findById(playerId);
         player.ifPresent(playerRepository::delete);
         return player;
     }
@@ -83,6 +83,7 @@ public class PlayerService {
     }
 
     public void createPlayerSession(UUID roomId, Long playerId) {
+        System.out.println("room id : " + roomId + " player id: " + playerId);
         PlayerSession session = new PlayerSession(
                 playerId, 
                 roomId, 
@@ -142,17 +143,4 @@ public class PlayerService {
     public boolean isInGame(UUID roomId, Long playerId) {
         return redisService.getMemberScore(RedisKeys.formatInGamePlayersKey(roomId), playerId) != null;
     }
-    // public List<PlayerDto> getPlayers(String order, UUID roomId) {
-    //     return redisService.getSortedSetWithScores(order, )
-    //         .stream()
-    //         .map(obj ->  {
-    //             Long playerId = Long.valueOf(obj.getValue().toString());
-    //             String name = (String) redisService.getField(RedisKeys.formatRoomKey(roomId), 
-    //                             RedisKeys.formatPlayerNameKey(playerId));
-    //             Boolean lost = (Boolean) redisService.getField(RedisKeys.formatRoomKey(roomId),
-    //                     RedisKeys.formatPlayerLostStatus(playerId));
-    //             return new PlayerDto(playerId, name, obj.getScore(), lost);
-    //         })
-    //         .collect(Collectors.toList());
-    // }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.nametrek.api.service.NotificationServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-02-22T02:12:15" hostname="akanBox" time="0.353">
+  <properties/>
+  <testcase name="testSendMessageToTopic()" classname="com.nametrek.api.service.NotificationServiceTest" time="0.353"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

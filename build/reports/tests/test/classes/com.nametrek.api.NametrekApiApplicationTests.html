@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.953s</div>
+<div class="counter">0.089s</div>
 <p>duration</p>
 </div>
 </td>
@@ -66,9 +66,6 @@
 <li>
 <a href="#tab1">Standard output</a>
 </li>
-<li>
-<a href="#tab2">Standard error</a>
-</li>
 </ul>
 <div id="tab0" class="tab">
 <h2>Tests</h2>
@@ -82,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">1.953s</td>
+<td class="success">0.089s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>21:03:49.110 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:03:49.772 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
+<pre>03:11:43.400 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+03:11:44.155 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,52 +99,41 @@
 
  :: Spring Boot ::                (v3.4.0)
 
-2025-01-23T21:03:51.487+01:00  INFO 64758 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.6 with PID 64758 (started by akan in /home/akan/projects/nametrek_backend)
-2025-01-23T21:03:51.508+01:00  INFO 64758 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2025-01-23T21:03:55.092+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2025-01-23T21:03:55.097+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-01-23T21:03:55.625+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 495 ms. Found 2 JPA repository interfaces.
-2025-01-23T21:03:55.676+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2025-01-23T21:03:55.678+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-01-23T21:03:55.729+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2025-01-23T21:03:55.730+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.RoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2025-01-23T21:03:55.731+01:00  INFO 64758 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 0 Redis repository interfaces.
-2025-01-23T21:03:57.890+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-01-23T21:03:58.086+01:00  INFO 64758 --- [Nametrek API] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-2025-01-23T21:03:58.204+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-01-23T21:03:59.155+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-01-23T21:03:59.238+01:00  INFO 64758 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-01-23T21:03:59.593+01:00  INFO 64758 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@68479e8b
-2025-01-23T21:03:59.599+01:00  INFO 64758 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-01-23T21:03:59.682+01:00  WARN 64758 --- [Nametrek API] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-01-23T21:03:59.752+01:00  INFO 64758 --- [Nametrek API] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2025-02-22T03:11:47.538+01:00  INFO 18835 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.6 with PID 18835 (started by akan in /home/akan/projects/nametrek_backend)
+2025-02-22T03:11:47.584+01:00  INFO 18835 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-02-22T03:11:54.740+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-22T03:11:54.747+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-22T03:11:55.332+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 535 ms. Found 2 JPA repository interfaces.
+2025-02-22T03:11:55.482+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-22T03:11:55.484+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-02-22T03:11:55.553+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-02-22T03:11:55.554+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.RoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-02-22T03:11:55.555+01:00  INFO 18835 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2025-02-22T03:11:58.532+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-22T03:11:59.114+01:00  INFO 18835 --- [Nametrek API] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+2025-02-22T03:11:59.359+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-02-22T03:11:59.886+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-22T03:12:00.164+01:00  INFO 18835 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-02-22T03:12:00.716+01:00  INFO 18835 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7164e28a
+2025-02-22T03:12:00.720+01:00  INFO 18835 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-02-22T03:12:01.186+01:00  WARN 18835 --- [Nametrek API] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-22T03:12:01.280+01:00  INFO 18835 --- [Nametrek API] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
-	Database version: 16.3
+	Database version: 17.2
 	Autocommit mode: undefined/unknown
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-01-23T21:04:02.376+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-01-23T21:04:02.547+01:00  INFO 64758 --- [Nametrek API] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-01-23T21:04:05.420+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-01-23T21:04:07.893+01:00  WARN 64758 --- [Nametrek API] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-01-23T21:04:09.765+01:00  WARN 64758 --- [Nametrek API] [    Test worker] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
-2025-01-23T21:04:10.374+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2025-01-23T21:04:10.376+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@6f05d5f2]]
-2025-01-23T21:04:10.378+01:00  INFO 64758 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2025-01-23T21:04:10.413+01:00  INFO 64758 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 20.112 seconds (process running for 25.765)
-</pre>
-</span>
-</div>
-<div id="tab2" class="tab">
-<h2>Standard error</h2>
-<span class="code">
-<pre>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
-WARNING: A Java agent has been loaded dynamically (/home/akan/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.10/e8eb255b2c378b9a6c7341e7b0e12f0a5636377/byte-buddy-agent-1.15.10.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2025-02-22T03:12:04.542+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-22T03:12:05.032+01:00  INFO 18835 --- [Nametrek API] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-22T03:12:09.899+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-22T03:12:12.342+01:00  WARN 18835 --- [Nametrek API] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-22T03:12:14.043+01:00  WARN 18835 --- [Nametrek API] [    Test worker] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-02-22T03:12:15.075+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2025-02-22T03:12:15.079+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2165828d]]
+2025-02-22T03:12:15.083+01:00  INFO 18835 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2025-02-22T03:12:15.206+01:00  INFO 18835 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 29.948 seconds (process running for 46.679)
 </pre>
 </span>
 </div>
@@ -159,7 +145,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at Jan 23, 2025, 9:04:12 PM</p>
+<a href="http://www.gradle.org">Gradle 8.11.1</a> at Feb 22, 2025, 3:12:17 AM</p>
 </div>
 </div>
 </body>
