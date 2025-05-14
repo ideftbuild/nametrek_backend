@@ -17,7 +17,7 @@ RUN chmod +x gradlew
 RUN ./gradlew build --no-daemon
 
 # Copy the built jar to app.jar
-RUN cp build/libs/*.jar app.jar
+RUN ./gradlew build --no-daemon || (cat build/reports/tests/test/index.html && false)
 
 # Run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
