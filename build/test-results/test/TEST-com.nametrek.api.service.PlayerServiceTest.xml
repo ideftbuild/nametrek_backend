@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-05-14T20:13:29" hostname="akanBox" time="0.54">
+<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-05-14T23:17:26.692Z" hostname="akanBox" time="0.314">
   <properties/>
-  <testcase name="testDeleteByRoomId()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.399"/>
-  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.021"/>
-  <testcase name="testGetPlayerById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.024"/>
-  <testcase name="testExistsById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.019"/>
-  <testcase name="testDeleteAndGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.026"/>
-  <testcase name="testCreatePlayerSession()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.026"/>
-  <testcase name="testGetPlayerByRoom()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.007"/>
+  <testcase name="testDeleteByRoomId()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.228"/>
+  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.032"/>
+  <testcase name="testGetPlayerById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.012"/>
+  <testcase name="testExistsById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.006"/>
+  <testcase name="testDeleteAndGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.008"/>
+  <testcase name="testCreatePlayerSession()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.013"/>
+  <testcase name="testGetPlayerByRoom()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.006"/>
   <system-out><![CDATA[setting mock test create player session methoddone!
 Calling the method
 room id : null player id: null

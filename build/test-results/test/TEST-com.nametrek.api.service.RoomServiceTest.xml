@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.service.RoomServiceTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2025-05-14T20:13:29" hostname="akanBox" time="0.752">
+<testsuite name="com.nametrek.api.service.RoomServiceTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2025-05-14T23:17:27.012Z" hostname="akanBox" time="0.443">
   <properties/>
-  <testcase name="testGetRoomUpdate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.499"/>
-  <testcase name="testGetOwner()" classname="com.nametrek.api.service.RoomServiceTest" time="0.011"/>
-  <testcase name="testLeave()" classname="com.nametrek.api.service.RoomServiceTest" time="0.021"/>
-  <testcase name="testJoinRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.014"/>
-  <testcase name="testLeaveWhenRoomIsEmpty()" classname="com.nametrek.api.service.RoomServiceTest" time="0.015"/>
-  <testcase name="testExistsById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.011"/>
-  <testcase name="testConnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.022"/>
-  <testcase name="testDeleteRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.014"/>
-  <testcase name="testGetRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.017"/>
-  <testcase name="testCreate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.017"/>
-  <testcase name="testGetPlayer()" classname="com.nametrek.api.service.RoomServiceTest" time="0.014"/>
-  <testcase name="testJoinRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.019"/>
-  <testcase name="testReconnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.027"/>
-  <testcase name="testAddPlayerToRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.015"/>
-  <testcase name="testGetRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.005"/>
-  <system-out><![CDATA[roomId: c45c64f6-6970-4a7d-8119-539613c85d0a
+  <testcase name="testGetRoomUpdate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.315"/>
+  <testcase name="testGetOwner()" classname="com.nametrek.api.service.RoomServiceTest" time="0.005"/>
+  <testcase name="testLeave()" classname="com.nametrek.api.service.RoomServiceTest" time="0.014"/>
+  <testcase name="testJoinRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.017"/>
+  <testcase name="testLeaveWhenRoomIsEmpty()" classname="com.nametrek.api.service.RoomServiceTest" time="0.01"/>
+  <testcase name="testExistsById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.005"/>
+  <testcase name="testConnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.009"/>
+  <testcase name="testDeleteRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.006"/>
+  <testcase name="testGetRoomById()" classname="com.nametrek.api.service.RoomServiceTest" time="0.004"/>
+  <testcase name="testCreate()" classname="com.nametrek.api.service.RoomServiceTest" time="0.008"/>
+  <testcase name="testGetPlayer()" classname="com.nametrek.api.service.RoomServiceTest" time="0.006"/>
+  <testcase name="testJoinRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.008"/>
+  <testcase name="testReconnect()" classname="com.nametrek.api.service.RoomServiceTest" time="0.009"/>
+  <testcase name="testAddPlayerToRoom()" classname="com.nametrek.api.service.RoomServiceTest" time="0.005"/>
+  <testcase name="testGetRoomByCode()" classname="com.nametrek.api.service.RoomServiceTest" time="0.008"/>
+  <system-out><![CDATA[roomId: 8070343f-c6e4-4ccd-9178-65e326b78542
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.081s</div>
+<div class="counter">1.075s</div>
 <p>duration</p>
 </div>
 </td>
@@ -58,19 +58,19 @@
 </tr>
 </table>
 </div>
-<div id="tabs">
+<div class="tab-container">
 <ul class="tabLinks">
 <li>
-<a href="#tab0">Tests</a>
+<a href="#">Tests</a>
 </li>
 <li>
-<a href="#tab1">Standard output</a>
+<a href="#">Standard output</a>
 </li>
 <li>
-<a href="#tab2">Standard error</a>
+<a href="#">Standard error</a>
 </li>
 </ul>
-<div id="tab0" class="tab">
+<div class="tab">
 <h2>Tests</h2>
 <table>
 <thead>
@@ -82,16 +82,16 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">1.081s</td>
+<td class="success">1.075s</td>
 <td class="success">passed</td>
 </tr>
 </table>
 </div>
-<div id="tab1" class="tab">
+<div class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>21:13:11.577 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:13:11.834 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
+<pre>00:16:55.617 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.nametrek.api.NametrekApiApplicationTests]: NametrekApiApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:16:56.184 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.nametrek.api.NametrekApiApplication for test class com.nametrek.api.NametrekApiApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,30 +102,30 @@
 
  :: Spring Boot ::                (v3.4.0)
 
-2025-05-14T21:13:13.108+01:00  INFO 45399 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.7 with PID 45399 (started by akan in /home/akan/projects/nametrek_backend)
-2025-05-14T21:13:13.111+01:00  INFO 45399 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : The following 1 profile is active: &quot;test&quot;
-2025-05-14T21:13:15.351+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2025-05-14T21:13:15.366+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-14T21:13:15.862+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 448 ms. Found 2 JPA repository interfaces.
-2025-05-14T21:13:15.911+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2025-05-14T21:13:15.913+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-05-14T21:13:15.948+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2025-05-14T21:13:15.949+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.RoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2025-05-14T21:13:15.950+01:00  INFO 45399 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 20 ms. Found 0 Redis repository interfaces.
-2025-05-14T21:13:17.864+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.r.AddressResolverGroupProvider     : Starting without optional netty's non-blocking DNS resolver library
-2025-05-14T21:13:17.871+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : -Dio.netty.eventLoopThreads: 4
-2025-05-14T21:13:17.881+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
-2025-05-14T21:13:18.050+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.core.event.jfr.EventRecorderHolder   : Starting with JFR support
-2025-05-14T21:13:18.066+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : LatencyUtils/HdrUtils are not available, metrics are disabled
-2025-05-14T21:13:18.752+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-05-14T21:13:18.972+01:00  INFO 45399 --- [Nametrek API] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-2025-05-14T21:13:19.082+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-05-14T21:13:19.951+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-14T21:13:20.063+01:00  INFO 45399 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-05-14T21:13:20.434+01:00  INFO 45399 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7aa63f50
-2025-05-14T21:13:20.438+01:00  INFO 45399 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-05-14T21:13:20.513+01:00  WARN 45399 --- [Nametrek API] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-05-14T21:13:20.561+01:00  INFO 45399 --- [Nametrek API] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2025-05-15T00:16:58.255+01:00  INFO 194650 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Starting NametrekApiApplicationTests using Java 21.0.7 with PID 194650 (started by akan in /home/akan/projects/nametrek_backend)
+2025-05-15T00:16:58.257+01:00  INFO 194650 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : The following 1 profile is active: &quot;test&quot;
+2025-05-15T00:17:00.416+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-15T00:17:00.419+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-15T00:17:00.720+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 288 ms. Found 2 JPA repository interfaces.
+2025-05-15T00:17:00.753+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2025-05-15T00:17:00.754+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-05-15T00:17:00.778+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.PlayerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-15T00:17:00.779+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.nametrek.api.repository.RoomRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2025-05-15T00:17:00.779+01:00  INFO 194650 --- [Nametrek API] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2025-05-15T00:17:02.082+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.r.AddressResolverGroupProvider     : Starting without optional netty's non-blocking DNS resolver library
+2025-05-15T00:17:02.085+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : -Dio.netty.eventLoopThreads: 4
+2025-05-15T00:17:02.089+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
+2025-05-15T00:17:04.188+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.core.event.jfr.EventRecorderHolder   : Starting with JFR support
+2025-05-15T00:17:04.205+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : LatencyUtils/HdrUtils are not available, metrics are disabled
+2025-05-15T00:17:05.470+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-15T00:17:05.528+01:00  INFO 194650 --- [Nametrek API] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+2025-05-15T00:17:05.564+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-15T00:17:06.488+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-15T00:17:07.112+01:00  INFO 194650 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-15T00:17:14.478+01:00  INFO 194650 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@175bf9c9
+2025-05-15T00:17:14.482+01:00  INFO 194650 --- [Nametrek API] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-15T00:17:16.614+01:00  WARN 194650 --- [Nametrek API] [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-05-15T00:17:16.641+01:00  INFO 194650 --- [Nametrek API] [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 17.4
@@ -133,31 +133,31 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-05-14T21:13:22.464+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-05-14T21:13:22.560+01:00  INFO 45399 --- [Nametrek API] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-14T21:13:24.395+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-05-14T21:13:25.692+01:00  WARN 45399 --- [Nametrek API] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-14T21:13:26.396+01:00  WARN 45399 --- [Nametrek API] [    Test worker] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
-2025-05-14T21:13:26.490+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
-2025-05-14T21:13:26.491+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : LatencyUtils/HdrUtils are not available, metrics are disabled
-2025-05-14T21:13:26.928+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
-2025-05-14T21:13:26.929+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4cf5cf47]]
-2025-05-14T21:13:26.931+01:00  INFO 45399 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
-2025-05-14T21:13:26.935+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] o.s.d.r.l.RedisMessageListenerContainer  : Starting RedisMessageListenerContainer...
-2025-05-14T21:13:26.937+01:00 DEBUG 45399 --- [Nametrek API] [    Test worker] o.s.d.r.l.RedisMessageListenerContainer  : Postpone listening for Redis messages until actual listeners are added
-2025-05-14T21:13:26.960+01:00  INFO 45399 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 14.701 seconds (process running for 17.362)
-2025-05-14T21:13:26.975+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] o.s.d.redis.core.RedisConnectionUtils    : Fetching Redis Connection from RedisConnectionFactory
-2025-05-14T21:13:26.980+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.RedisClient              : Trying to get a Redis connection for: redis://default:********@localhost
-2025-05-14T21:13:27.276+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] i.lettuce.core.resource.KqueueProvider   : Starting without optional kqueue library
-2025-05-14T21:13:27.279+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] i.lettuce.core.resource.IOUringProvider  : Starting without optional io_uring library
-2025-05-14T21:13:27.281+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.resource.EpollProvider   : Starting without optional epoll library
-2025-05-14T21:13:27.292+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Allocating executor io.netty.channel.nio.NioEventLoopGroup
-2025-05-14T21:13:27.293+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.channel.nio.NioEventLoopGroup
-2025-05-14T21:13:27.309+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Adding reference to io.netty.channel.nio.NioEventLoopGroup@5255109b, existing ref count 0
-2025-05-14T21:13:27.560+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.RedisClient              : Resolved SocketAddress localhost/&lt;unresolved&gt;:6379 using redis://default:********@localhost
-2025-05-14T21:13:27.561+01:00 DEBUG 45399 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.AbstractRedisClient      : Connecting to Redis at localhost/&lt;unresolved&gt;:6379
-2025-05-14T21:13:27.659+01:00 DEBUG 45399 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.CommandHandler   : [channel=0x1707c5ff, [id: 0xb405fc24] (inactive), epid=0x1, chid=0x1] channelRegistered()
-2025-05-14T21:13:27.707+01:00 DEBUG 45399 --- [Nametrek API] [ioEventLoop-6-1] io.lettuce.core.AbstractRedisClient      : Connecting to Redis at localhost/&lt;unresolved&gt;:6379: {}
+2025-05-15T00:17:18.530+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-15T00:17:20.419+01:00  INFO 194650 --- [Nametrek API] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-15T00:17:22.089+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-15T00:17:22.745+01:00  WARN 194650 --- [Nametrek API] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-15T00:17:24.452+01:00  WARN 194650 --- [Nametrek API] [    Test worker] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-05-15T00:17:24.515+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.util.concurrent.DefaultEventExecutorGroup
+2025-05-15T00:17:24.516+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] i.l.c.resource.DefaultClientResources    : LatencyUtils/HdrUtils are not available, metrics are disabled
+2025-05-15T00:17:24.967+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2025-05-15T00:17:24.968+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@37dcda42]]
+2025-05-15T00:17:24.970+01:00  INFO 194650 --- [Nametrek API] [    Test worker] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2025-05-15T00:17:24.971+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] o.s.d.r.l.RedisMessageListenerContainer  : Starting RedisMessageListenerContainer...
+2025-05-15T00:17:24.972+01:00 DEBUG 194650 --- [Nametrek API] [    Test worker] o.s.d.r.l.RedisMessageListenerContainer  : Postpone listening for Redis messages until actual listeners are added
+2025-05-15T00:17:24.990+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] o.s.d.redis.core.RedisConnectionUtils    : Fetching Redis Connection from RedisConnectionFactory
+2025-05-15T00:17:25.000+01:00  INFO 194650 --- [Nametrek API] [    Test worker] c.n.api.NametrekApiApplicationTests      : Started NametrekApiApplicationTests in 28.114 seconds (process running for 39.263)
+2025-05-15T00:17:25.034+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.RedisClient              : Trying to get a Redis connection for: redis://default:********@localhost
+2025-05-15T00:17:25.248+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] i.lettuce.core.resource.KqueueProvider   : Starting without optional kqueue library
+2025-05-15T00:17:25.250+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] i.lettuce.core.resource.IOUringProvider  : Starting without optional io_uring library
+2025-05-15T00:17:25.252+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.resource.EpollProvider   : Starting without optional epoll library
+2025-05-15T00:17:25.257+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Allocating executor io.netty.channel.nio.NioEventLoopGroup
+2025-05-15T00:17:25.258+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Creating executor io.netty.channel.nio.NioEventLoopGroup
+2025-05-15T00:17:25.266+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] i.l.c.r.DefaultEventLoopGroupProvider    : Adding reference to io.netty.channel.nio.NioEventLoopGroup@1105848c, existing ref count 0
+2025-05-15T00:17:25.690+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.RedisClient              : Resolved SocketAddress localhost/&lt;unresolved&gt;:6379 using redis://default:********@localhost
+2025-05-15T00:17:25.691+01:00 DEBUG 194650 --- [Nametrek API] [MessageBroker-1] io.lettuce.core.AbstractRedisClient      : Connecting to Redis at localhost/&lt;unresolved&gt;:6379
+2025-05-15T00:17:25.827+01:00 DEBUG 194650 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.CommandHandler   : [channel=0xfcde7d0d, [id: 0x6e2d4473] (inactive), epid=0x1, chid=0x1] channelRegistered()
+2025-05-15T00:17:25.911+01:00 DEBUG 194650 --- [Nametrek API] [ioEventLoop-6-1] io.lettuce.core.AbstractRedisClient      : Connecting to Redis at localhost/&lt;unresolved&gt;:6379: {}
 
 io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: localhost/127.0.0.1:6379
 Caused by: java.net.ConnectException: Connection refused
@@ -175,10 +175,10 @@ Caused by: java.net.ConnectException: Connection refused
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.115.Final.jar:4.1.115.Final]
 	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
 
-2025-05-14T21:13:27.715+01:00 DEBUG 45399 --- [Nametrek API] [ioEventLoop-6-1] io.lettuce.core.RedisChannelHandler      : closeAsync()
-2025-05-14T21:13:27.715+01:00 DEBUG 45399 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.DefaultEndpoint  : [unknown, epid=0x1] closeAsync()
-2025-05-14T21:13:27.725+01:00 DEBUG 45399 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.CommandHandler   : [channel=0x1707c5ff, [id: 0xb405fc24] (inactive), epid=0x1, chid=0x1] channelUnregistered()
-2025-05-14T21:13:27.723+01:00 ERROR 45399 --- [Nametrek API] [MessageBroker-1] o.s.s.s.TaskUtils$LoggingErrorHandler    : Unexpected error occurred in scheduled task
+2025-05-15T00:17:25.917+01:00 DEBUG 194650 --- [Nametrek API] [ioEventLoop-6-1] io.lettuce.core.RedisChannelHandler      : closeAsync()
+2025-05-15T00:17:25.917+01:00 DEBUG 194650 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.DefaultEndpoint  : [unknown, epid=0x1] closeAsync()
+2025-05-15T00:17:25.919+01:00 DEBUG 194650 --- [Nametrek API] [ioEventLoop-6-1] i.lettuce.core.protocol.CommandHandler   : [channel=0xfcde7d0d, [id: 0x6e2d4473] (inactive), epid=0x1, chid=0x1] channelUnregistered()
+2025-05-15T00:17:25.920+01:00 ERROR 194650 --- [Nametrek API] [MessageBroker-1] o.s.s.s.TaskUtils$LoggingErrorHandler    : Unexpected error occurred in scheduled task
 
 org.springframework.data.redis.RedisConnectionFailureException: Unable to connect to Redis
 	at org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory$ExceptionTranslatingConnectionProvider.translateException(LettuceConnectionFactory.java:1858) ~[spring-data-redis-3.4.0.jar:3.4.0]
@@ -240,7 +240,7 @@ Caused by: java.net.ConnectException: Connection refused
 </pre>
 </span>
 </div>
-<div id="tab2" class="tab">
+<div class="tab">
 <h2>Standard error</h2>
 <span class="code">
 <pre>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
@@ -259,7 +259,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.11.1</a> at May 14, 2025, 9:13:30 PM</p>
+<a href="https://www.gradle.org">Gradle 8.13</a> at May 15, 2025, 12:17:27 AM</p>
 </div>
 </div>
 </body>
