@@ -1,11 +1,23 @@
-# Use a Java 21 base image
 FROM eclipse-temurin:21-jdk-jammy
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Cpoy the built JAR file into the container
-COPY build/libs/*.jar app.jar
+# Copy gradle wrapper and build files
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle.kts settings.gradle.kts ./
 
-# Define the default command to run your app
-ENTRYPOINT ["java","-jar","app.jar"]
+# Copy source code
+COPY src src
+
+# Make gradlew executable
+RUN chmod +x gradlew
+
+# Build the jar inside container
+RUN ./gradlew build --no-daemon
+
+# Copy the built jar to app.jar
+RUN cp build/libs/*.jar app.jar
+
+# Run the jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
