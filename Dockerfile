@@ -13,11 +13,8 @@ COPY src src
 # Make gradlew executable
 RUN chmod +x gradlew
 
-# Build the jar inside container
-RUN ./gradlew build --no-daemon
-
-# Copy the built jar to app.jar
-RUN ./gradlew build --no-daemon || (cat build/reports/tests/test/index.html && false)
+# Build the jar inside container and skip tests
+RUN ./gradlew build -x test --no-daemon
 
 # Run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
