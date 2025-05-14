@@ -60,7 +60,7 @@ public class GameService {
     private final Integer scoreStep = 10;
     private final RedisService redisService;
     private final CountDownService countDownService;
-    private final Integer ANSWER_COUNTDOWN = 15;
+    private final Integer ANSWER_COUNTDOWN = 10;
 
     @Autowired
     public GameService(

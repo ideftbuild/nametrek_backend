@@ -1,56 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="7" skipped="0" failures="2" errors="0" timestamp="2025-02-22T02:11:33" hostname="akanBox" time="6.942">
+<testsuite name="com.nametrek.api.service.PlayerServiceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-05-14T20:13:29" hostname="akanBox" time="0.54">
   <properties/>
-  <testcase name="testDeleteByRoomId()" classname="com.nametrek.api.service.PlayerServiceTest" time="6.588"/>
-  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.121"/>
-  <testcase name="testGetPlayerById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.023"/>
-  <testcase name="testExistsById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.016"/>
-  <testcase name="testDeleteAndGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.031"/>
-  <testcase name="testCreatePlayerSession()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.073">
-    <failure message="java.lang.NullPointerException: Cannot invoke &quot;java.lang.Long.longValue()&quot; because the return value of &quot;org.mockito.Mockito.any()&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;java.lang.Long.longValue()&quot; because the return value of &quot;org.mockito.Mockito.any()&quot; is null
-	at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-</failure>
-  </testcase>
-  <testcase name="testGetPlayerByRoom()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.04">
-    <failure message="org.mockito.exceptions.misusing.InvalidUseOfMatchersException: &#10;Misplaced or misused argument matcher detected here:&#10;&#10;-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)&#10;-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)&#10;-&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)&#10;&#10;You cannot use argument matchers outside of verification or stubbing.&#10;Examples of correct usage of argument matchers:&#10;    when(mock.get(anyInt())).thenReturn(null);&#10;    doThrow(new RuntimeException()).when(mock).someVoidMethod(any());&#10;    verify(mock).someMethod(contains(&quot;foo&quot;))&#10;&#10;This message may appear after an NullPointerException if the last matcher is returning an object &#10;like any() but the stubbed method signature expect a primitive argument, in this case,&#10;use primitive alternatives.&#10;    when(mock.get(any())); // bad use, will raise NPE&#10;    when(mock.get(anyInt())); // correct usage use&#10;&#10;Also, this error might show up because you use argument matchers with methods that cannot be mocked.&#10;Following methods *cannot* be stubbed/verified: final/private/equals()/hashCode().&#10;Mocking methods declared on non-public parent classes is not supported.&#10;" type="org.mockito.exceptions.misusing.InvalidUseOfMatchersException">org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
-Misplaced or misused argument matcher detected here:
-
--&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
--&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
--&gt; at com.nametrek.api.service.PlayerServiceTest.testCreatePlayerSession(PlayerServiceTest.java:163)
-
-You cannot use argument matchers outside of verification or stubbing.
-Examples of correct usage of argument matchers:
-    when(mock.get(anyInt())).thenReturn(null);
-    doThrow(new RuntimeException()).when(mock).someVoidMethod(any());
-    verify(mock).someMethod(contains(&quot;foo&quot;))
-
-This message may appear after an NullPointerException if the last matcher is returning an object 
-like any() but the stubbed method signature expect a primitive argument, in this case,
-use primitive alternatives.
-    when(mock.get(any())); // bad use, will raise NPE
-    when(mock.get(anyInt())); // correct usage use
-
-Also, this error might show up because you use argument matchers with methods that cannot be mocked.
-Following methods *cannot* be stubbed/verified: final/private/equals()/hashCode().
-Mocking methods declared on non-public parent classes is not supported.
-
-	at app//org.mockito.junit.jupiter.MockitoExtension.beforeEach(MockitoExtension.java:160)
-	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base@21.0.6/java.util.ArrayList.forEach(ArrayList.java:1596)
-	Suppressed: java.lang.NullPointerException: Cannot invoke &quot;java.util.Set.forEach(java.util.function.Consumer)&quot; because the return value of &quot;org.junit.jupiter.api.extension.ExtensionContext$Store.remove(Object, java.lang.Class)&quot; is null
-		at org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:194)
-		... 2 more
-</failure>
-  </testcase>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
-WARNING: A Java agent has been loaded dynamically (/home/akan/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.10/e8eb255b2c378b9a6c7341e7b0e12f0a5636377/byte-buddy-agent-1.15.10.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
+  <testcase name="testDeleteByRoomId()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.399"/>
+  <testcase name="testSave()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.021"/>
+  <testcase name="testGetPlayerById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.024"/>
+  <testcase name="testExistsById()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.019"/>
+  <testcase name="testDeleteAndGet()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.026"/>
+  <testcase name="testCreatePlayerSession()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.026"/>
+  <testcase name="testGetPlayerByRoom()" classname="com.nametrek.api.service.PlayerServiceTest" time="0.007"/>
+  <system-out><![CDATA[setting mock test create player session methoddone!
+Calling the method
+room id : null player id: null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
 </testsuite>

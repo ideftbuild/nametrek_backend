@@ -8,11 +8,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.anyLong;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nametrek.api.dto.PlayerDto;
 import com.nametrek.api.exception.ObjectNotFoundException;
 import com.nametrek.api.model.Player;
+import com.nametrek.api.model.PlayerSession;
 import com.nametrek.api.model.Room;
 import com.nametrek.api.repository.PlayerRepository;
 import com.nametrek.api.service.PlayerService;
@@ -160,11 +164,14 @@ public class PlayerServiceTest {
      */
     @Test
     public void testCreatePlayerSession() {
-        doNothing().when(redisService).setValueExp(any(), any(), any(), any());
+        System.out.print("setting mock test create player session method");
+        doNothing().when(redisService).setValueExp(anyString(), ArgumentMatchers.<PlayerSession>any(), anyLong(), any());
+        System.out.println("done!");
 
+        System.out.println("Calling the method");
         playerService.createPlayerSession(player.getRoom().getId(), player.getId());
 
-        verify(redisService).setValueExp(any(), any(), any(), any());
+        verify(redisService).setValueExp(anyString(), ArgumentMatchers.<PlayerSession>any(), anyLong(), any());
     }
 
     /**
