@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo "=== SMTP Connection Diagnostic Tool ==="
+echo
+
+# Check DNS resolution
+echo "1. Testing DNS resolution..."
+if host smtp.gmail.com > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ DNS resolution successful${NC}"
+    echo "IPv4 addresses:"
+    host smtp.gmail.com | grep "has address"
+    echo "IPv6 addresses:"
+    host smtp.gmail.com | grep "has IPv6"
+else
+    echo -e "${RED}✗ DNS resolution failed${NC}"
+fi
+echo
+
+# Test IPv4 connectivity
+echo "2. Testing IPv4 connectivity..."
+if ping -c 1 -4 smtp.gmail.com > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ IPv4 connectivity successful${NC}"
+else
+    echo -e "${RED}✗ IPv4 connectivity failed${NC}"
+fi
+echo
+
+# Test IPv6 connectivity
+echo "3. Testing IPv6 connectivity..."
+if ping -c 1 -6 smtp.gmail.com > /dev/null 2>&1; then
+    echo -e "${GREEN}✓ IPv6 connectivity successful${NC}"
+else
+    echo -e "${YELLOW}! IPv6 connectivity failed - this is okay if IPv6 is not enabled${NC}"
+fi
+echo
+
+# Check common SMTP ports
+echo "4. Testing SMTP ports..."
+for port in 587 465 25; do
+    echo -n "Testing port $port: "
+    if timeout 5 bash -c "</dev/tcp/smtp.gmail.com/$port" 2>/dev/null; then
+        echo -e "${GREEN}✓ Port $port is reachable${NC}"
+    else
+        echo -e "${RED}✗ Port $port is not reachable${NC}"
+    fi
+done
+echo
+
+# Check firewall rules
+echo "5. Checking firewall rules..."
+if command -v firewall-cmd >/dev/null 2>&1; then
+    echo "Firewall is active with the following configuration:"
+    echo "Open ports:"
+    firewall-cmd --list-ports
+    echo "Active services:"
+    firewall-cmd --list-services
+else
+    echo -e "${YELLOW}! firewalld is not installed or not running${NC}"
+fi
+echo
+
+# Network route check
+echo "6. Checking network routes..."
+ip route show | grep default
+
+echo
+echo "=== Diagnostic Complete ==="
