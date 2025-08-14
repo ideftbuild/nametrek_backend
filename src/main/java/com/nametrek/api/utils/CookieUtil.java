@@ -10,10 +10,12 @@ public class CookieUtil {
 
     public static void addCookie(HttpServletResponse response, String name, String value) {
         Cookie cookie = new Cookie(name, value);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
 
         response.addCookie(cookie);
+        response.addHeader("Set-Cookie", String.format("%s=%s; HttpOnly; Secure; SameSite=None", name, value));
     }
 
     public static String getCookieValue(HttpServletRequest request, String name) {
