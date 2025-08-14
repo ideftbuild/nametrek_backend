@@ -45,11 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 
 
 /**
- * Controller class for managing rooms and player interactions, 
+ * Controller class for managing rooms and player interactions,
  * providing endpoints for CRUD operations.
  */
 @RequestMapping("/rooms")
 @RestController
+@Slf4j
 public class RoomController {
 
 
@@ -79,10 +80,10 @@ public class RoomController {
     /**
      * Create a room
      *
-     * @param createRoomDto dto containing the username of the player creating the room 
+     * @param createRoomDto dto containing the username of the player creating the room
      * and number of rounds to play
-     * 
-     * @return the newly created room with a status code of 201 
+     *
+     * @return the newly created room with a status code of 201
      */
     @PostMapping("")
     public ResponseEntity<RoomPlayerInfo> create(
@@ -142,11 +143,14 @@ public class RoomController {
     @GetMapping("/{roomId}/players/me")
     public ResponseEntity<PlayerDto> getPlayer(@PathVariable String roomId, HttpServletRequest request) {
         String playerId = CookieUtil.getCookieValue(request, "player_id");
+        log.info("Player id is: {}", playerId);
         try {
             if (playerId == null) {
+                log.debug("Player session is empty");
                 throw new ObjectNotFoundException("Player session is empty");
             }
             Player player = roomService.getPlayer(UUID.fromString(roomId), Long.valueOf(playerId));
+            log.info("Player {} found in room {}", player.getName(), roomId);
             return ResponseEntity.ok(new PlayerDto(player.getId(), player.getName(), player.getScore(), false));
         } catch (ObjectNotFoundException e) {
             return ResponseEntity.notFound().build();
